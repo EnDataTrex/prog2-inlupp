@@ -14,28 +14,41 @@ import java.util.Arrays;
 
 public class Gui extends Application {
 
+
   public void start(Stage stage) {
     Graph<String> graph = new ListGraph<String>();
+
     GridPane root = new GridPane(); //roten
     HBox hbox = new HBox(); // till för "övriga" knappar
 
     MenuButton menuBar = new MenuButton("File"); //till för menyknappar
     MenuItem newMapmenu = new MenuItem("New Map");
-    newMapmenu.setOnAction(event -> {});//Skapar ett event med vad som ska hända när man klickar på knappen (Kan behöva ändas beroende på vad action är)
 
-    MenuItem openInMenu = new MenuItem("Open");
-    newMapmenu.setOnAction(event -> {});
+    Label newMapLabel = new Label("New Map");
+    newMapLabel.setOnMouseClicked(event -> {newMapLabel.setText("I clicked New Map");});
+    CustomMenuItem customMenuItem = new CustomMenuItem(newMapLabel);
+    menuBar.getItems().add(customMenuItem);
 
-    MenuItem saveInMenu = new MenuItem("Save");
-    saveInMenu.setOnAction(event -> {});
+    Label openLabel = new Label("Open");
+    openLabel.setOnMouseClicked(event -> {openLabel.setText("I clicked Open");});
+    CustomMenuItem customMenuItem2 = new CustomMenuItem(openLabel);
+    menuBar.getItems().add(customMenuItem2);
 
-    MenuItem saveImageInMenu = new MenuItem("Save Image");
-    saveImageInMenu.setOnAction(event -> {});
+    Label saveLabel = new Label("Save");
+    saveLabel.setOnMouseClicked(event -> {saveLabel.setText("I clicked Save");});
+    CustomMenuItem customMenuItem3 = new CustomMenuItem(saveLabel);
+    menuBar.getItems().add(customMenuItem3);
 
-    MenuItem exitInMenu = new MenuItem("Exit");
-    exitInMenu.setOnAction(event -> {});
+    Label saveImageLabel = new Label("Save Image");
+    saveImageLabel.setOnMouseClicked(event -> {saveImageLabel.setText("I clicked Saved Image");});
+    CustomMenuItem customMenuItem4 = new CustomMenuItem(saveImageLabel);
+    menuBar.getItems().add(customMenuItem4);
 
-    menuBar.getItems().addAll(newMapmenu, openInMenu, saveInMenu, saveImageInMenu, exitInMenu); //Lägger till alla knappar i menyn
+    Label exitLabel = new Label("Exit");
+    exitLabel.setOnMouseClicked(event -> {exitLabel.setText("I clicked Exit");});
+    CustomMenuItem customMenuItem5 = new CustomMenuItem(exitLabel);
+    menuBar.getItems().add(customMenuItem5);
+
 
     root.setBackground(Background.fill(Color.LIGHTGREY)); //sätter bakgrund
     root.add(menuBar, 0, 0); //lägger till menubar i roten
@@ -60,7 +73,7 @@ public class Gui extends Application {
     }
 
     hbox.getChildren().get(0).onMouseClickedProperty().setValue(event -> {
-      newMapScene(stage); //skapar ett event för första knappen (ändrar färg)
+      hbox.setBackground(Background.fill(Color.DARKRED));
     });
 
     hbox.getChildren().get(1).onMouseClickedProperty().setValue(event -> {
@@ -82,10 +95,6 @@ public class Gui extends Application {
     Scene scene = new Scene(root);
     stage.setScene(scene);
     stage.show();
-
-
-
-
   }
 
   //WORK IN PROGRESS

@@ -60,7 +60,7 @@ public class Gui extends Application {
     }
 
     hbox.getChildren().get(0).onMouseClickedProperty().setValue(event -> {
-      hbox.setBackground(Background.fill(Color.LIGHTPINK)); //skapar ett event för första knappen (ändrar färg)
+      newMapScene(stage); //skapar ett event för första knappen (ändrar färg)
     });
 
     hbox.getChildren().get(1).onMouseClickedProperty().setValue(event -> {
@@ -81,6 +81,23 @@ public class Gui extends Application {
 
     Scene scene = new Scene(root);
     stage.setScene(scene);
+    stage.show();
+
+
+
+
+  }
+
+  //WORK IN PROGRESS
+  public void newMapScene(Stage stage) {
+    GridPane root = new GridPane();
+    HBox hbox2 = new HBox();
+    Button mapButton = new Button("New Map");
+    hbox2.getChildren().add(mapButton);
+    root.add(hbox2, 0, 2);
+
+    Scene newMapScene = new Scene(root);
+    stage.setScene(newMapScene);
     stage.show();
   }
 

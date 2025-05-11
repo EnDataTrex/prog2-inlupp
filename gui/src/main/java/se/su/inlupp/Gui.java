@@ -33,10 +33,10 @@ public class Gui extends Application {
 
 
     ArrayList<String> elements = new ArrayList<>(Arrays.asList("Find Path", "Show Connection", "New Place", "New Connection", "Change Connection"));
-      for (String element : elements) {
-          Button button = new Button(element);
-          hbox.getChildren().add(button);
-      }
+    for (String element : elements) {
+      Button button = new Button(element);
+      hbox.getChildren().add(button);
+    }
     Scene scene = new Scene(root);
     stage.setScene(scene);
     stage.show();

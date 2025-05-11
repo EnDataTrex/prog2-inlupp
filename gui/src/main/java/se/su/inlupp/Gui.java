@@ -28,8 +28,8 @@ public class Gui extends Application {
     root.add(hbox, 0,1); //lägger till hbox i roten
     hbox.setAlignment(Pos.CENTER);
     root.setPadding(new Insets(10));
-
     hbox.setSpacing(3);
+    GridPane.setMargin(menuBar, new Insets(0,0,10,0));
 
 
     ArrayList<String> elements = new ArrayList<>(Arrays.asList("Find Path", "Show Connection", "New Place", "New Connection", "Change Connection"));
@@ -37,6 +37,7 @@ public class Gui extends Application {
       Button button = new Button(element);
       hbox.getChildren().add(button);
     }
+
     Scene scene = new Scene(root);
     stage.setScene(scene);
     stage.show();

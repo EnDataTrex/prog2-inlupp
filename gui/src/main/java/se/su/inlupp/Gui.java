@@ -49,6 +49,22 @@ public class Gui extends Application {
     CustomMenuItem customMenuItem5 = new CustomMenuItem(exitLabel);
     menuBar.getItems().add(customMenuItem5);
 
+    //två problem:
+    //1. klickytan är begränsad till texten, vilket skapar en inte helt användarvanlig funktion,
+    //(skulle typ vilja att hela "boxen" där texten står ingår i klickytan)
+    //2. skulle kunna vara så att detta inte längre är användbart när vi vill lägga till funktioner,
+    //för varje label, vet inte kanske går att göra, kan också vara så att du redan har tänkt,
+    //på detta sättet och kommit fram till samma problem:)
+    /*
+    ArrayList<String> labels = new ArrayList<>(Arrays.asList("New Map", "Open", "Save", "Save Image", "Exit"));
+    for (String label : labels) {
+      Label l = new Label(label);
+      l.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
+      l.setOnMouseClicked(event -> {l.setText("I clicked " + label);});
+      CustomMenuItem customMenuItem1 = new CustomMenuItem(l);
+      menuBar.getItems().add(customMenuItem1);
+    }
+     */
 
     root.setBackground(Background.fill(Color.LIGHTGREY)); //sätter bakgrund
     root.add(menuBar, 0, 0); //lägger till menubar i roten

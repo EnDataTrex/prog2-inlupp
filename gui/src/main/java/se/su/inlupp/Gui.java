@@ -12,14 +12,16 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Gui extends Application {
-
-
+  Image image;
+  String fileName;
+  Stage stage;
   public void start(Stage stage) {
+    this.stage = stage;
     Graph<String> graph = new ListGraph<String>();
 
     GridPane root = new GridPane(); //roten
@@ -30,11 +32,12 @@ public class Gui extends Application {
 
     FileChooser filechooser = new FileChooser();
 
+
     Label newMapLabel = new Label("New Map");
     newMapLabel.setOnMouseClicked(event -> {
       File file = filechooser.showOpenDialog(stage);
-      String fileName = file.toURI().toString();
-      Image image = new Image(fileName);
+      fileName = file.toURI().toString();
+      image = new Image(fileName);
       System.out.println(fileName);
       BackgroundImage backgroundImage = new BackgroundImage(
               image,
@@ -52,9 +55,11 @@ public class Gui extends Application {
     openLabel.setOnMouseClicked(event -> {openLabel.setText("I clicked Open");});
     CustomMenuItem customMenuItem2 = new CustomMenuItem(openLabel);
     menuBar.getItems().add(customMenuItem2);
-
+    //-------------------------------------------------------------------------------//
     Label saveLabel = new Label("Save");
-    saveLabel.setOnMouseClicked(event -> {saveLabel.setText("I clicked Save");});
+    saveLabel.setOnMouseClicked(event -> {
+        save(fileName);
+      });
     CustomMenuItem customMenuItem3 = new CustomMenuItem(saveLabel);
     menuBar.getItems().add(customMenuItem3);
 
@@ -130,6 +135,22 @@ public class Gui extends Application {
     Scene scene = new Scene(root);
     stage.setScene(scene);
     stage.show();
+  }
+
+  private void save(String fileName) {
+    try{
+      FileOutputStream fileOutputStream = new FileOutputStream(fileName);
+      ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+      FileChooser fileChooser = new FileChooser();
+      File file = fileChooser.showSaveDialog(this.stage);
+      objectOutputStream.writeObject(file);
+    }
+    catch (FileNotFoundException e){
+      e.printStackTrace(); //TODO VI SKA HA EN POPUP ALERT
+    }
+    catch (IOException e){
+      e.printStackTrace(); //TODO VI SKA HA EN POPUP ALERT
+    }
   }
 
   //WORK IN PROGRESS

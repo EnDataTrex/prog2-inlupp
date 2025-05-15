@@ -20,9 +20,11 @@ public class Gui extends Application {
   Image image;
   String fileName;
   Stage stage;
+  Graph<String> graph;
+
   public void start(Stage stage) {
     this.stage = stage;
-    Graph<String> graph = new ListGraph<String>();
+    graph = new ListGraph<String>();
 
     GridPane root = new GridPane(); //roten
     HBox hbox = new HBox(); // till för "övriga" knappar
@@ -144,6 +146,9 @@ public class Gui extends Application {
       FileChooser fileChooser = new FileChooser();
       File file = fileChooser.showSaveDialog(this.stage);
       objectOutputStream.writeObject(file);
+      for(String node : graph.getNodes()) {
+
+      }
     }
     catch (FileNotFoundException e){
       e.printStackTrace(); //TODO VI SKA HA EN POPUP ALERT

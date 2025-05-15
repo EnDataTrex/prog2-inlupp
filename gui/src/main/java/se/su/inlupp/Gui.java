@@ -6,9 +6,13 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -24,11 +28,26 @@ public class Gui extends Application {
     MenuButton menuBar = new MenuButton("File"); //till för menyknappar
     MenuItem newMapmenu = new MenuItem("New Map");
 
+    FileChooser filechooser = new FileChooser();
+
     Label newMapLabel = new Label("New Map");
-    newMapLabel.setOnMouseClicked(event -> {newMapLabel.setText("I clicked New Map");});
+    newMapLabel.setOnMouseClicked(event -> {
+      File file = filechooser.showOpenDialog(stage);
+      String fileName = file.toURI().toString();
+      Image image = new Image(fileName);
+      System.out.println(fileName);
+      BackgroundImage backgroundImage = new BackgroundImage(
+              image,
+              BackgroundRepeat.NO_REPEAT,
+              BackgroundRepeat.NO_REPEAT,
+              BackgroundPosition.DEFAULT,
+              BackgroundSize.DEFAULT
+              );
+      root.setBackground(new Background(backgroundImage));
+    });
     CustomMenuItem customMenuItem = new CustomMenuItem(newMapLabel);
     menuBar.getItems().add(customMenuItem);
-
+    //-------------------------------------------------------------------------------//
     Label openLabel = new Label("Open");
     openLabel.setOnMouseClicked(event -> {openLabel.setText("I clicked Open");});
     CustomMenuItem customMenuItem2 = new CustomMenuItem(openLabel);

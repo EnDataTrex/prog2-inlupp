@@ -29,7 +29,7 @@ public class Gui extends Application {
 
   public void start(Stage stage) {
     this.stage = stage;
-    graph = new ListGraph<String>();
+    graph = new ListGraph<>();
 
     root = new GridPane(); //roten
     HBox hbox = new HBox(); // till för "övriga" knappar

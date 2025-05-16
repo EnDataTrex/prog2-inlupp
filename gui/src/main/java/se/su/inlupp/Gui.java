@@ -1,6 +1,7 @@
 package se.su.inlupp;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -19,6 +20,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Optional;
 
 public class Gui extends Application {
   Image image;
@@ -26,6 +28,7 @@ public class Gui extends Application {
   Stage stage;
   Graph<String> graph;
   GridPane root;
+  boolean saveStatus;
 
   public void start(Stage stage) {
     this.stage = stage;
@@ -81,6 +84,7 @@ public class Gui extends Application {
     saveLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
     saveLabel.setOnMouseClicked(event -> {
         save();
+        saveStatus = true;
       });
     CustomMenuItem customMenuItem3 = new CustomMenuItem(saveLabel);
     menuBar.getItems().add(customMenuItem3);
@@ -98,7 +102,29 @@ public class Gui extends Application {
     Label exitLabel = new Label("Exit");
     exitLabel.setPadding(new Insets(1, 30, 1, 1));
     exitLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
-    exitLabel.setOnMouseClicked(event -> {exitLabel.setText("I clicked Exit");});
+    exitLabel.setOnMouseClicked(event -> {
+
+      //Jag vet att koden ser lite rörig ut atm, jag ska försöka flytta ut den sen till en metod (se nedanför) men
+      //just nu så funkar det inte då jag inte kan använda mig av event.consume
+      if (!saveStatus) {
+        Alert notSavedAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        notSavedAlert.setTitle("Unsaved Changes");
+
+        ButtonType okButton = new ButtonType("OK");
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        notSavedAlert.getButtonTypes().setAll(cancelButton, okButton);
+
+        Optional<ButtonType> result = notSavedAlert.showAndWait();
+        if (result.isPresent() && result.get() == okButton) {
+          Platform.exit();
+        } else {
+          event.consume();
+        }
+      } else {
+        Platform.exit();
+      }
+    });
     CustomMenuItem customMenuItem5 = new CustomMenuItem(exitLabel);
     menuBar.getItems().add(customMenuItem5);
 
@@ -241,6 +267,9 @@ public class Gui extends Application {
       Alert alert = new Alert(Alert.AlertType.ERROR, "IO Error " + e.getMessage());
       alert.showAndWait();
     }
+  }
+
+  private void exitProgram() {
   }
 
 

@@ -146,9 +146,9 @@ public class Gui extends Application {
       FileChooser fileChooser = new FileChooser();
       File file = fileChooser.showSaveDialog(this.stage);
       objectOutputStream.writeObject(file);
-      for(String node : graph.getNodes()) {
+      //for(String node : graph.getNodes()) {
 
-      }
+      //}
     }
     catch (FileNotFoundException e){
       Alert alert = new Alert(Alert.AlertType.ERROR, "File not found!");
@@ -161,7 +161,6 @@ public class Gui extends Application {
       //e.printStackTrace(); //TODO VI SKA HA EN POPUP ALERT
       }
     }
-  }
 
   //WORK IN PROGRESS
   public void newMapScene(Stage stage) {

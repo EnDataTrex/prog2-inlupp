@@ -188,7 +188,7 @@ public class Gui extends Application {
   private void save(String fileName) {
     try{
       FileChooser fileChooser = new FileChooser();
-      File file = fileChooser.showSaveDialog(this.stage);
+      File file = fileChooser.showSaveDialog(stage);
 
       FileOutputStream fileOutputStream = new FileOutputStream(file);
       ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);

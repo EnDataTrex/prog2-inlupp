@@ -174,9 +174,16 @@ public class Gui extends Application {
       ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
       objectOutputStream.writeObject(file);
       objectOutputStream.close();
-      //for(String node : graph.getNodes()) {
 
-      //}
+      File fileWithContent = new File("C:\\Users\\isabe");
+      FileWriter fileWriter = new FileWriter(fileWithContent);
+      BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+      Location location = new Location("sverige", 33,45);
+      graph.add(location.toString());
+      for(String node : graph.getNodes()) {
+          bufferedWriter.write(node);
+      }
     }
     catch (FileNotFoundException e){
       Alert alert = new Alert(Alert.AlertType.ERROR, "File not found!");

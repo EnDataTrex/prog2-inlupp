@@ -74,7 +74,7 @@ public class Gui extends Application {
     saveLabel.setPadding(new Insets(1, 30, 1, 1));
     saveLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
     saveLabel.setOnMouseClicked(event -> {
-        save(fileName);
+        save();
       });
     CustomMenuItem customMenuItem3 = new CustomMenuItem(saveLabel);
     menuBar.getItems().add(customMenuItem3);

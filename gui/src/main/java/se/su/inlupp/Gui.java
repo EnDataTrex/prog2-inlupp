@@ -39,7 +39,9 @@ public class Gui extends Application {
 
     FileChooser filechooser = new FileChooser();
 
-
+    //TODO ändra bakgrundsbilden så att fönstret är satt efter bildens storlek,
+    //TODO fönstret ska vara dynamisk, men inte bilden
+    //TODO roten ska anpassa sig efter bilden
     Label newMapLabel = new Label("New Map");
     newMapLabel.setPadding(new Insets(1, 30, 1, 1));
     newMapLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
@@ -73,6 +75,7 @@ public class Gui extends Application {
     CustomMenuItem customMenuItem2 = new CustomMenuItem(openLabel);
     menuBar.getItems().add(customMenuItem2);
     //-------------------------------------------------------------------------------//
+    //TODO spara filvägen till bilden, inte bilden
     Label saveLabel = new Label("Save");
     saveLabel.setPadding(new Insets(1, 30, 1, 1));
     saveLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");

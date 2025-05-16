@@ -63,6 +63,9 @@ public class Gui extends Application {
     CustomMenuItem customMenuItem = new CustomMenuItem(newMapLabel);
     menuBar.getItems().add(customMenuItem);
     //-------------------------------------------------------------------------------//
+    /* Sätt bilen till fixed, och se till att fönstrets minimi storlek är anpassad till den så
+    * den alltid är synlig, men se också till att weight/alignment är anpassat till resten av fönstret
+    * TODO KOLLA UPP VILKA KOMMANDON SOM GÖR PADDING TRANSFORMATIVT*/
     Label openLabel = new Label("Open");
     openLabel.setPadding(new Insets(1, 30, 1, 1));
     openLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
@@ -230,7 +233,8 @@ public class Gui extends Application {
     }
   }
 
-  //WORK IN PROGRESS
+
+  //ta bort
   public void newMapScene(Stage stage) {
     GridPane root = new GridPane();
     HBox hbox2 = new HBox();

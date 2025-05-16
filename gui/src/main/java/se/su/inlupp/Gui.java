@@ -1,6 +1,7 @@
 package se.su.inlupp;
 
 import javafx.application.Application;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -12,6 +13,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,8 +48,11 @@ public class Gui extends Application {
               image,
               BackgroundRepeat.NO_REPEAT,
               BackgroundRepeat.NO_REPEAT,
-              BackgroundPosition.DEFAULT,
-              BackgroundSize.DEFAULT
+              BackgroundPosition.CENTER,
+              new BackgroundSize(
+                        100, 100, true, true, true, false
+              )
+              //BackgroundSize.DEFAULT
               );
       root.setBackground(new Background(backgroundImage));
     });
@@ -138,14 +144,15 @@ public class Gui extends Application {
     stage.setScene(scene);
     stage.show();
   }
-
+  /*
   private void save(String fileName) {
     try{
-      FileOutputStream fileOutputStream = new FileOutputStream(fileName);
-      ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
       FileChooser fileChooser = new FileChooser();
       File file = fileChooser.showSaveDialog(this.stage);
+      FileOutputStream fileOutputStream = new FileOutputStream(file);
+      ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
       objectOutputStream.writeObject(file);
+      objectOutputStream.close();
       //for(String node : graph.getNodes()) {
 
       //}
@@ -161,6 +168,39 @@ public class Gui extends Application {
       //e.printStackTrace(); //TODO VI SKA HA EN POPUP ALERT
       }
     }
+
+   */
+  private void save(String fileName) {
+    try{
+      FileChooser fileChooser = new FileChooser();
+      File file = fileChooser.showSaveDialog(this.stage);
+
+      FileOutputStream fileOutputStream = new FileOutputStream(file);
+      ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+
+      //vet inte om det finns något annat sätt att göra det på eller om det är såhär de har tänkt,
+      //men efter att ha googlat runt lite verkar det som att detta är ett vanligt sätt att spara bilder
+      //verkar docks om att vi då inte behöver fileName då
+      BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
+      ImageIO.write(bufferedImage, "png", file);
+
+      //objectOutputStream.writeObject(file);
+      //objectOutputStream.close();
+      //for(String node : graph.getNodes()) {
+
+      //}
+    }
+    catch (FileNotFoundException e){
+      Alert alert = new Alert(Alert.AlertType.ERROR, "File not found!");
+      alert.showAndWait();
+      //e.printStackTrace(); //TODO VI SKA HA EN POPUP ALERT
+    }
+    catch (IOException e){
+      Alert alert = new Alert(Alert.AlertType.ERROR, "IO Error " + e.getMessage());
+      alert.showAndWait();
+      //e.printStackTrace(); //TODO VI SKA HA EN POPUP ALERT
+    }
+  }
 
   //WORK IN PROGRESS
   public void newMapScene(Stage stage) {

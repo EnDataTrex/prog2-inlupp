@@ -151,10 +151,15 @@ public class Gui extends Application {
       }
     }
     catch (FileNotFoundException e){
-      e.printStackTrace(); //TODO VI SKA HA EN POPUP ALERT
+      Alert alert = new Alert(Alert.AlertType.ERROR, "File not found!");
+      alert.showAndWait();
+      //e.printStackTrace(); //TODO VI SKA HA EN POPUP ALERT
     }
     catch (IOException e){
-      e.printStackTrace(); //TODO VI SKA HA EN POPUP ALERT
+      Alert alert = new Alert(Alert.AlertType.ERROR, "IO Error " + e.getMessage());
+      alert.showAndWait();
+      //e.printStackTrace(); //TODO VI SKA HA EN POPUP ALERT
+      }
     }
   }
 

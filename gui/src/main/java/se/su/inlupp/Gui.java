@@ -41,6 +41,8 @@ public class Gui extends Application {
 
 
     Label newMapLabel = new Label("New Map");
+    newMapLabel.setPadding(new Insets(1, 30, 1, 1));
+    newMapLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
     newMapLabel.setOnMouseClicked(event -> {
       File file = filechooser.showOpenDialog(stage);
       fileName = file.toURI().toString();
@@ -62,11 +64,15 @@ public class Gui extends Application {
     menuBar.getItems().add(customMenuItem);
     //-------------------------------------------------------------------------------//
     Label openLabel = new Label("Open");
+    openLabel.setPadding(new Insets(1, 30, 1, 1));
+    openLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
     openLabel.setOnMouseClicked(event -> {openLabel.setText("I clicked Open");});
     CustomMenuItem customMenuItem2 = new CustomMenuItem(openLabel);
     menuBar.getItems().add(customMenuItem2);
     //-------------------------------------------------------------------------------//
     Label saveLabel = new Label("Save");
+    saveLabel.setPadding(new Insets(1, 30, 1, 1));
+    saveLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
     saveLabel.setOnMouseClicked(event -> {
         save(fileName);
       });
@@ -74,6 +80,8 @@ public class Gui extends Application {
     menuBar.getItems().add(customMenuItem3);
 
     Label saveImageLabel = new Label("Save Image");
+    saveImageLabel.setPadding(new Insets(1, 30, 1, 1));
+    saveImageLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
     saveImageLabel.setOnMouseClicked(event -> {
       //saveImageLabel.setText("I clicked Saved Image");
       saveImage();
@@ -82,6 +90,8 @@ public class Gui extends Application {
     menuBar.getItems().add(customMenuItem4);
 
     Label exitLabel = new Label("Exit");
+    exitLabel.setPadding(new Insets(1, 30, 1, 1));
+    exitLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
     exitLabel.setOnMouseClicked(event -> {exitLabel.setText("I clicked Exit");});
     CustomMenuItem customMenuItem5 = new CustomMenuItem(exitLabel);
     menuBar.getItems().add(customMenuItem5);

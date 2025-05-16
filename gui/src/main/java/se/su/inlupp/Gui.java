@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -24,12 +25,13 @@ public class Gui extends Application {
   String fileName;
   Stage stage;
   Graph<String> graph;
+  GridPane root;
 
   public void start(Stage stage) {
     this.stage = stage;
     graph = new ListGraph<String>();
 
-    GridPane root = new GridPane(); //roten
+    root = new GridPane(); //roten
     HBox hbox = new HBox(); // till för "övriga" knappar
 
     MenuButton menuBar = new MenuButton("File"); //till för menyknappar
@@ -72,7 +74,10 @@ public class Gui extends Application {
     menuBar.getItems().add(customMenuItem3);
 
     Label saveImageLabel = new Label("Save Image");
-    saveImageLabel.setOnMouseClicked(event -> {saveImageLabel.setText("I clicked Saved Image");});
+    saveImageLabel.setOnMouseClicked(event -> {
+      //saveImageLabel.setText("I clicked Saved Image");
+      saveImage();
+    });
     CustomMenuItem customMenuItem4 = new CustomMenuItem(saveImageLabel);
     menuBar.getItems().add(customMenuItem4);
 
@@ -199,6 +204,18 @@ public class Gui extends Application {
       Alert alert = new Alert(Alert.AlertType.ERROR, "IO Error " + e.getMessage());
       alert.showAndWait();
       //e.printStackTrace(); //TODO VI SKA HA EN POPUP ALERT
+    }
+  }
+
+  public void saveImage(){
+    try {
+      WritableImage image = root.snapshot(null, null);
+      BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
+      ImageIO.write(bufferedImage, "png", new File("capture.png"));
+    }
+    catch (IOException e){
+      Alert alert = new Alert(Alert.AlertType.ERROR, "IO Error " + e.getMessage());
+      alert.showAndWait();
     }
   }
 

@@ -159,8 +159,8 @@ public class Gui extends Application {
     stage.setScene(scene);
     stage.show();
   }
-  /*
-  private void save(String fileName) {
+
+  private void save() {
     try{
       FileChooser fileChooser = new FileChooser();
       File file = fileChooser.showSaveDialog(this.stage);
@@ -184,7 +184,7 @@ public class Gui extends Application {
       }
     }
 
-   */
+   /*
   private void save(String fileName) {
     try{
       FileChooser fileChooser = new FileChooser();
@@ -216,6 +216,7 @@ public class Gui extends Application {
       //e.printStackTrace(); //TODO VI SKA HA EN POPUP ALERT
     }
   }
+    */
 
   public void saveImage(){
     try {

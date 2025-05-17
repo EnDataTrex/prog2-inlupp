@@ -64,6 +64,7 @@ public class Gui extends Application {
               //BackgroundSize.DEFAULT
               );
       root.setBackground(new Background(backgroundImage));
+      changeWindowSize(image.getWidth(),image.getHeight());
       saveStatus = true;
     });
     CustomMenuItem customMenuItem = new CustomMenuItem(newMapLabel);
@@ -170,9 +171,16 @@ public class Gui extends Application {
       hbox.setBackground(Background.fill(Color.BLACK));
     });
 
+
+
     Scene scene = new Scene(root);
     stage.setScene(scene);
     stage.show();
+  }
+
+  private void changeWindowSize(double width, double height) {
+    stage.setMinHeight(height);
+    stage.setMinWidth(width);
   }
 
   private void save() {

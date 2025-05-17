@@ -52,14 +52,13 @@ public class Gui extends Application {
       File file = filechooser.showOpenDialog(stage);
       fileName = file.toURI().toString();
       image = new Image(fileName);
-      System.out.println(fileName);
       BackgroundImage backgroundImage = new BackgroundImage(
               image,
               BackgroundRepeat.NO_REPEAT,
               BackgroundRepeat.NO_REPEAT,
               BackgroundPosition.CENTER,
               new BackgroundSize(
-                        100, 100, true, true, true, false
+                        100, 100, false, false, false, false
               )
               //BackgroundSize.DEFAULT
               );

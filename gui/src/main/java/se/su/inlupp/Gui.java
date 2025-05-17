@@ -206,39 +206,7 @@ public class Gui extends Application {
       }
     }
 
-   /*
-  private void save(String fileName) {
-    try{
-      FileChooser fileChooser = new FileChooser();
-      File file = fileChooser.showSaveDialog(stage);
 
-      FileOutputStream fileOutputStream = new FileOutputStream(file);
-      ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-
-      //vet inte om det finns något annat sätt att göra det på eller om det är såhär de har tänkt,
-      //men efter att ha googlat runt lite verkar det som att detta är ett vanligt sätt att spara bilder
-      //verkar docks om att vi då inte behöver fileName då
-      BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
-      ImageIO.write(bufferedImage, "png", file);
-
-      //objectOutputStream.writeObject(file);
-      //objectOutputStream.close();
-      //for(String node : graph.getNodes()) {
-
-      //}
-    }
-    catch (FileNotFoundException e){
-      Alert alert = new Alert(Alert.AlertType.ERROR, "File not found!");
-      alert.showAndWait();
-      //e.printStackTrace(); //TODO VI SKA HA EN POPUP ALERT
-    }
-    catch (IOException e){
-      Alert alert = new Alert(Alert.AlertType.ERROR, "IO Error " + e.getMessage());
-      alert.showAndWait();
-      //e.printStackTrace(); //TODO VI SKA HA EN POPUP ALERT
-    }
-  }
-    */
 
   public void saveImage(){
     try {
@@ -251,9 +219,6 @@ public class Gui extends Application {
       alert.showAndWait();
     }
   }
-
-
-
 
   //Kollar först ifall savestatus är false eller true. Om det är false, skapa en popop med 2 alternativ.
   //Om man klickar på ok så stängs programmet ner, om man klickar på cancel så stängs programmet inte ner
@@ -276,20 +241,6 @@ public class Gui extends Application {
     } else {
       Platform.exit();
     }
-  }
-
-
-  //ta bort
-  public void newMapScene(Stage stage) {
-    GridPane root = new GridPane();
-    HBox hbox2 = new HBox();
-    Button mapButton = new Button("New Map");
-    hbox2.getChildren().add(mapButton);
-    root.add(hbox2, 0, 2);
-
-    Scene newMapScene = new Scene(root);
-    stage.setScene(newMapScene);
-    stage.show();
   }
 
   public static void main(String[] args) {

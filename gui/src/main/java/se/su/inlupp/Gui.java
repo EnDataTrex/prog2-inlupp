@@ -179,30 +179,29 @@ public class Gui extends Application {
     try{
       FileChooser fileChooser = new FileChooser();
       File file = fileChooser.showSaveDialog(this.stage);
-      FileOutputStream fileOutputStream = new FileOutputStream(file);
-      ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-      objectOutputStream.writeObject(file);
-      objectOutputStream.close();
 
-      File fileWithContent = new File("C:\\Users\\isabe");
-      FileWriter fileWriter = new FileWriter(fileWithContent);
-      BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+      FileWriter fileWriter = new FileWriter(file);
+      PrintWriter printWriter = new PrintWriter(fileWriter);
+
+      printWriter.write("En mening");
 
       Location location = new Location("sverige", 33,45);
       graph.add(location.toString());
       for(String node : graph.getNodes()) {
-          bufferedWriter.write(node);
+        if(!graph.getNodes().isEmpty()){
+          printWriter.write(node);
+        }
       }
+      printWriter.close();
+      fileWriter.close();
     }
     catch (FileNotFoundException e){
       Alert alert = new Alert(Alert.AlertType.ERROR, "File not found!");
       alert.showAndWait();
-      //e.printStackTrace(); //TODO VI SKA HA EN POPUP ALERT
     }
     catch (IOException e){
       Alert alert = new Alert(Alert.AlertType.ERROR, "IO Error " + e.getMessage());
       alert.showAndWait();
-      //e.printStackTrace(); //TODO VI SKA HA EN POPUP ALERT
       }
     }
 

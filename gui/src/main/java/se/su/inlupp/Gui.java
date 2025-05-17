@@ -57,10 +57,7 @@ public class Gui extends Application {
               BackgroundRepeat.NO_REPEAT,
               BackgroundRepeat.NO_REPEAT,
               BackgroundPosition.CENTER,
-              new BackgroundSize(
-                        100, 100, false, false, false, false
-              )
-              //BackgroundSize.DEFAULT
+              BackgroundSize.DEFAULT
               );
       root.setBackground(new Background(backgroundImage));
       changeWindowSize(image.getWidth(),image.getHeight());

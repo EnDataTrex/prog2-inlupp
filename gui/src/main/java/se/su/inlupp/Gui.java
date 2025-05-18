@@ -206,9 +206,9 @@ public class Gui extends Application {
 
       for(String node : graph.getNodes()) {
         if(!graph.getNodes().isEmpty()){
-          //for(Edge<T> edge : getEdgesFrom(node)){
+          for(Edge<String> edge : graph.getEdgesFrom(node)){
 
-          //}
+          }
           String nodeWithFormat = "";
           nodeWithFormat = nodeWithFormat + node + ";";
         }

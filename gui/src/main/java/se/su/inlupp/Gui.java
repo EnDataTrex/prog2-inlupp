@@ -209,7 +209,7 @@ public class Gui extends Application {
         nodeWithFormat = nodeWithFormat + node + ";";
         if(!graph.getNodes().isEmpty()){
           for(Edge<String> edge : graph.getEdgesFrom(node)) {
-            nodeWithFormat = nodeWithFormat + edge.getDestination() + ";" + edge.getWeight() + ";" + edge.getWeight() + ";";
+            nodeWithFormat = nodeWithFormat + edge.getDestination() + ";" + edge.getName() + ";" + edge.getWeight() + ";";
             printWriter.print(nodeWithFormat);
           }
         }

@@ -184,15 +184,22 @@ public class Gui extends Application {
   }
 
   private void open() {
-    FileChooser fileChooser = new FileChooser();
-
+    //Om det krånglar, kollar saveStatus
+    if (!saveStatus) {
+      FileChooser fileChooser = new FileChooser();
+      File file = fileChooser.showOpenDialog(stage);
+    }
+    else{
+      Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You have unsaved changes", ButtonType.OK, ButtonType.CANCEL);
+      alert.showAndWait();
+    }
   }
 
   private void save() {
     try{
       if(image != null){
       FileChooser fileChooser = new FileChooser();
-      File file = fileChooser.showSaveDialog(this.stage);
+      File file = fileChooser.showSaveDialog(stage);
 
       FileWriter fileWriter = new FileWriter(file);
       PrintWriter printWriter = new PrintWriter(fileWriter);

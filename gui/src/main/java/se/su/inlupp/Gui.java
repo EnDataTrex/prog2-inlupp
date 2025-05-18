@@ -206,6 +206,7 @@ public class Gui extends Application {
           String locationWithFormat = "";
           locationWithFormat = locationWithFormat + l.getName() + ";" + l.getX() + ";" + l.getY() + ";";
           printWriter.write(locationWithFormat);
+          //TODO om det är den sista i listan ska inget ; skrivas ut
         }
       }
       printWriter.println();

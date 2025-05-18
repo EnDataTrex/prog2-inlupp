@@ -195,6 +195,12 @@ public class Gui extends Application {
       Location location = new Location("sverige", 33,45);
       locationGraph.add(location);
 
+      String node1 = "Stockholm";
+      String node2 = "Malmö";
+      graph.add(node1);
+      graph.add(node2);
+      graph.connect(node1, node2, "train", 4);
+
       for(Location l : locationGraph.getNodes()) {
         if(!locationGraph.getNodes().isEmpty()){
           String locationWithFormat = "";

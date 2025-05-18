@@ -202,15 +202,14 @@ public class Gui extends Application {
           printWriter.write(locationWithFormat);
         }
       }
-
-
       for(String node : graph.getNodes()) {
         String nodeWithFormat = "";
         nodeWithFormat = nodeWithFormat + node + ";";
         if(!graph.getNodes().isEmpty()){
+          nodeWithFormat = nodeWithFormat + node + ";";
           for(Edge<String> edge : graph.getEdgesFrom(node)) {
             nodeWithFormat = nodeWithFormat + edge.getDestination() + ";" + edge.getName() + ";" + edge.getWeight() + ";";
-            printWriter.print(nodeWithFormat);
+            printWriter.println(nodeWithFormat);
           }
         }
       }
@@ -220,7 +219,6 @@ public class Gui extends Application {
       else{
         Alert alert = new Alert(Alert.AlertType.ERROR, "No image Error");
         alert.showAndWait();
-
       }
     }
     catch (FileNotFoundException e){

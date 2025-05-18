@@ -210,6 +210,7 @@ public class Gui extends Application {
         if(!graph.getNodes().isEmpty()){
           for(Edge<String> edge : graph.getEdgesFrom(node)) {
             nodeWithFormat = nodeWithFormat + edge.getDestination() + ";" + edge.getWeight() + ";" + edge.getWeight() + ";";
+            printWriter.print(nodeWithFormat);
           }
         }
       }

@@ -40,29 +40,14 @@ public class Gui extends Application {
     HBox hbox = new HBox(); // till för "övriga" knappar
 
     MenuButton menuBar = new MenuButton("File"); //till för menyknappar
-    MenuItem newMapmenu = new MenuItem("New Map");
+    //Behövs den? Den används aldrig
+    //MenuItem newMapmenu = new MenuItem("New Map");
 
-    FileChooser filechooser = new FileChooser();
-
-    //TODO ändra bakgrundsbilden så att fönstret är satt efter bildens storlek,
-    //TODO fönstret ska vara dynamisk, men inte bilden
-    //TODO roten ska anpassa sig efter bilden
     Label newMapLabel = new Label("New Map");
     newMapLabel.setPadding(new Insets(1, 30, 1, 1));
     newMapLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
     newMapLabel.setOnMouseClicked(event -> {
-      File file = filechooser.showOpenDialog(stage);
-      fileName = file.toURI().toString();
-      image = new Image(fileName);
-      BackgroundImage backgroundImage = new BackgroundImage(
-              image,
-              BackgroundRepeat.NO_REPEAT,
-              BackgroundRepeat.NO_REPEAT,
-              BackgroundPosition.CENTER,
-              BackgroundSize.DEFAULT
-              );
-      root.setBackground(new Background(backgroundImage));
-      changeWindowSize(image.getWidth(),image.getHeight());
+      newMap();
       saveStatus = true;
     });
     CustomMenuItem customMenuItem = new CustomMenuItem(newMapLabel);
@@ -76,11 +61,11 @@ public class Gui extends Application {
     openLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
     openLabel.setOnMouseClicked(event -> {
       open();
+      //TODO ändra savestatus?
     });
     CustomMenuItem customMenuItem2 = new CustomMenuItem(openLabel);
     menuBar.getItems().add(customMenuItem2);
     //-------------------------------------------------------------------------------//
-    //TODO spara filvägen till bilden, inte bilden
     Label saveLabel = new Label("Save");
     saveLabel.setPadding(new Insets(1, 30, 1, 1));
     saveLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
@@ -95,7 +80,6 @@ public class Gui extends Application {
     saveImageLabel.setPadding(new Insets(1, 30, 1, 1));
     saveImageLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
     saveImageLabel.setOnMouseClicked(event -> {
-      //saveImageLabel.setText("I clicked Saved Image");
       saveImage();
     });
     CustomMenuItem customMenuItem4 = new CustomMenuItem(saveImageLabel);
@@ -171,8 +155,6 @@ public class Gui extends Application {
       hbox.setBackground(Background.fill(Color.BLACK));
     });
 
-
-
     Scene scene = new Scene(root);
     stage.setScene(scene);
     stage.show();
@@ -189,12 +171,17 @@ public class Gui extends Application {
       if (!saveStatus) {
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(stage);
+
         FileReader fileReader = new FileReader(file);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
+
         graph = new ListGraph<>();
         locationGraph = new ListGraph<>();
 
         fileName = bufferedReader.readLine();
+        image = new Image(fileName);
+        //TODO den öppnar inte upp bilden, det blir tomt
+
         String line = bufferedReader.readLine();
         String[] objects = line.split(";");
         for(int i = 0; i < objects.length; i+=3) {
@@ -215,16 +202,17 @@ public class Gui extends Application {
             graph.connect(from, to, edge, weight);
           }
         }
-
-      }
-      else{
+      } else{
+        //TODO den blir lite konsigt för om man trycker på ok så gör den inget, så lite förvirrande uppbyggd
+        //TODO tycker kanske att om man trycker på OK så borde den gå till filechooser, eller att vi,
+        //TODO ändrar felmeddelandet
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You have unsaved changes", ButtonType.OK, ButtonType.CANCEL);
         alert.showAndWait();
       }
     }catch (IOException e){
       Alert alert = new Alert(Alert.AlertType.ERROR, "IO Error " + e.getMessage());
       alert.showAndWait();
-    };
+    }
   }
 
   private void save() {
@@ -268,31 +256,41 @@ public class Gui extends Application {
       }
       printWriter.close();
       fileWriter.close();
-      }
-      else{
+      } else{
         Alert alert = new Alert(Alert.AlertType.ERROR, "No image Error");
         alert.showAndWait();
       }
-    }
-    catch (FileNotFoundException e){
+    } catch (FileNotFoundException e){
       Alert alert = new Alert(Alert.AlertType.ERROR, "File not found!");
       alert.showAndWait();
-    }
-    catch (IOException e){
+    } catch (IOException e){
       Alert alert = new Alert(Alert.AlertType.ERROR, "IO Error " + e.getMessage());
       alert.showAndWait();
-      }
     }
+  }
 
+  private void newMap() {
+    FileChooser filechooser = new FileChooser();
+    File file = filechooser.showOpenDialog(stage);
+    fileName = file.toURI().toString();
+    image = new Image(fileName);
+    BackgroundImage backgroundImage = new BackgroundImage(
+            image,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundPosition.CENTER,
+            BackgroundSize.DEFAULT
+    );
+    root.setBackground(new Background(backgroundImage));
+    changeWindowSize(image.getWidth(),image.getHeight());
+  }
 
-
-  public void saveImage(){
+  private void saveImage() {
     try {
       WritableImage image = root.snapshot(null, null);
       BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
       ImageIO.write(bufferedImage, "png", new File("capture.png"));
-    }
-    catch (IOException e){
+    } catch (IOException e){
       Alert alert = new Alert(Alert.AlertType.ERROR, "IO Error " + e.getMessage());
       alert.showAndWait();
     }

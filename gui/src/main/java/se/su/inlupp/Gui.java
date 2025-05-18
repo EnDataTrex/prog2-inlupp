@@ -208,13 +208,13 @@ public class Gui extends Application {
           printWriter.write(locationWithFormat);
         }
       }
+      printWriter.println();
       for(String node : graph.getNodes()) {
         String nodeWithFormat = "";
         nodeWithFormat = nodeWithFormat + node + ";";
         if(!graph.getNodes().isEmpty()){
-          nodeWithFormat = nodeWithFormat + node + ";";
           for(Edge<String> edge : graph.getEdgesFrom(node)) {
-            nodeWithFormat = nodeWithFormat + edge.getDestination() + ";" + edge.getName() + ";" + edge.getWeight() + ";";
+            nodeWithFormat = nodeWithFormat + edge.getDestination() + ";" + edge.getName() + ";" + edge.getWeight();
             printWriter.println(nodeWithFormat);
           }
         }

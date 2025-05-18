@@ -74,7 +74,9 @@ public class Gui extends Application {
     Label openLabel = new Label("Open");
     openLabel.setPadding(new Insets(1, 30, 1, 1));
     openLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
-    openLabel.setOnMouseClicked(event -> {openLabel.setText("I clicked Open");});
+    openLabel.setOnMouseClicked(event -> {
+      open();
+    });
     CustomMenuItem customMenuItem2 = new CustomMenuItem(openLabel);
     menuBar.getItems().add(customMenuItem2);
     //-------------------------------------------------------------------------------//
@@ -179,6 +181,11 @@ public class Gui extends Application {
   private void changeWindowSize(double width, double height) {
     stage.setMinHeight(height);
     stage.setMinWidth(width);
+  }
+
+  private void open() {
+    FileChooser fileChooser = new FileChooser();
+
   }
 
   private void save() {

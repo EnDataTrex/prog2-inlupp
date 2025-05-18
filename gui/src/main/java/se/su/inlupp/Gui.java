@@ -27,11 +27,13 @@ public class Gui extends Application {
   String fileName;
   Stage stage;
   Graph<String> graph;
+  Graph<Location> locationGraph;
   GridPane root;
   boolean saveStatus = false; //Gör det tydligt om programmet är sparat eller inte
 
   public void start(Stage stage) {
     this.stage = stage;
+    locationGraph = new ListGraph<>();
     graph = new ListGraph<>();
 
     root = new GridPane(); //roten
@@ -181,23 +183,44 @@ public class Gui extends Application {
 
   private void save() {
     try{
+      if(image != null){
       FileChooser fileChooser = new FileChooser();
       File file = fileChooser.showSaveDialog(this.stage);
 
       FileWriter fileWriter = new FileWriter(file);
       PrintWriter printWriter = new PrintWriter(fileWriter);
 
-      printWriter.write("En mening");
+      printWriter.println(fileName);
 
       Location location = new Location("sverige", 33,45);
-      graph.add(location.toString());
+      locationGraph.add(location);
+
+      for(Location l : locationGraph.getNodes()) {
+        if(!locationGraph.getNodes().isEmpty()){
+          String locationWithFormat = "";
+          locationWithFormat = locationWithFormat + l.getName() + ";" + l.getX() + ";" + l.getY() + ";";
+          printWriter.write(locationWithFormat);
+        }
+      }
+
+
       for(String node : graph.getNodes()) {
         if(!graph.getNodes().isEmpty()){
-          printWriter.write(node);
+          //for(Edge<T> edge : getEdgesFrom(node)){
+
+          //}
+          String nodeWithFormat = "";
+          nodeWithFormat = nodeWithFormat + node + ";";
         }
       }
       printWriter.close();
       fileWriter.close();
+      }
+      else{
+        Alert alert = new Alert(Alert.AlertType.ERROR, "No image Error");
+        alert.showAndWait();
+
+      }
     }
     catch (FileNotFoundException e){
       Alert alert = new Alert(Alert.AlertType.ERROR, "File not found!");

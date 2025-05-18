@@ -205,12 +205,12 @@ public class Gui extends Application {
 
 
       for(String node : graph.getNodes()) {
+        String nodeWithFormat = "";
+        nodeWithFormat = nodeWithFormat + node + ";";
         if(!graph.getNodes().isEmpty()){
-          for(Edge<String> edge : graph.getEdgesFrom(node)){
-
+          for(Edge<String> edge : graph.getEdgesFrom(node)) {
+            nodeWithFormat = nodeWithFormat + edge.getDestination() + ";" + edge.getWeight() + ";" + edge.getWeight() + ";";
           }
-          String nodeWithFormat = "";
-          nodeWithFormat = nodeWithFormat + node + ";";
         }
       }
       printWriter.close();

@@ -184,15 +184,47 @@ public class Gui extends Application {
   }
 
   private void open() {
+    try{
     //Om det krånglar, kollar saveStatus
-    if (!saveStatus) {
-      FileChooser fileChooser = new FileChooser();
-      File file = fileChooser.showOpenDialog(stage);
-    }
-    else{
-      Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You have unsaved changes", ButtonType.OK, ButtonType.CANCEL);
+      if (!saveStatus) {
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(stage);
+        FileReader fileReader = new FileReader(file);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        graph = new ListGraph<>();
+        locationGraph = new ListGraph<>();
+
+        fileName = bufferedReader.readLine();
+        String line = bufferedReader.readLine();
+        String[] objects = line.split(";");
+        for(int i = 0; i < objects.length; i+=3) {
+          String name = objects[i];
+          double x = Double.parseDouble(objects[i+1]);
+          double y = Double.parseDouble(objects[i+2]);
+          Location location = new Location(name, x, y);
+          locationGraph.add(location);
+        }
+
+        while((line = bufferedReader.readLine()) != null) {
+          objects = line.split(";");
+          String from = objects[0];
+          String to = objects[1];
+          String edge = objects[2];
+          int weight = Integer.parseInt(objects[3]);
+          if(graph.getEdgeBetween(from, to) == null) {
+            graph.connect(from, to, edge, weight);
+          }
+        }
+
+      }
+      else{
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You have unsaved changes", ButtonType.OK, ButtonType.CANCEL);
+        alert.showAndWait();
+      }
+    }catch (IOException e){
+      Alert alert = new Alert(Alert.AlertType.ERROR, "IO Error " + e.getMessage());
       alert.showAndWait();
-    }
+    };
   }
 
   private void save() {

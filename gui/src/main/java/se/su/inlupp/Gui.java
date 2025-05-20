@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -27,7 +28,9 @@ public class Gui extends Application {
   Graph<String> graph;
   Graph<Location> locationGraph;
   GridPane root;
-  boolean saveStatus = false; //Gör det tydligt om programmet är sparat eller inte
+  boolean saveStatus = false;
+  HBox hbox;
+  //Gör det tydligt om programmet är sparat eller inte
 
   public void start(Stage stage) {
     this.stage = stage;
@@ -35,7 +38,7 @@ public class Gui extends Application {
     graph = new ListGraph<>();
 
     root = new GridPane(); //roten
-    HBox hbox = new HBox(); // till för "övriga" knappar
+    hbox = new HBox(); // till för "övriga" knappar
 
     MenuButton menuBar = new MenuButton("File"); //till för menyknappar
     //Behövs den? Den används aldrig
@@ -133,6 +136,7 @@ public class Gui extends Application {
       hbox.getChildren().add(button); //lägger till den som ett barn i hbox
     }
 
+    /*----------------------------------------------------------------------------------------------*/
     hbox.getChildren().get(0).onMouseClickedProperty().setValue(event -> {
       hbox.setBackground(Background.fill(Color.DARKRED));
     });
@@ -142,7 +146,7 @@ public class Gui extends Application {
     });
 
     hbox.getChildren().get(2).onMouseClickedProperty().setValue(event -> {
-      hbox.setBackground(Background.fill(Color.LIGHTYELLOW));
+      newPlace();
     });
 
     hbox.getChildren().get(3).onMouseClickedProperty().setValue(event -> {
@@ -153,6 +157,7 @@ public class Gui extends Application {
       hbox.setBackground(Background.fill(Color.BLACK));
     });
 
+    /*-----------------------------------------------------------------------------------*/
     Scene scene = new Scene(root);
     stage.setScene(scene);
     stage.show();
@@ -327,6 +332,15 @@ public class Gui extends Application {
     );
     root.setBackground(new Background(backgroundImage));
     changeWindowSize(image.getWidth(),image.getHeight());
+  }
+
+  private void newPlace(){
+    root.setCursor(Cursor.CROSSHAIR);
+    hbox.getChildren().get(2).onMouseClickedProperty().setValue(null);
+    root.setOnMouseClicked(mouseEvent -> {
+      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+      alert.setTitle("New Place");
+    });
   }
 
   public static void main(String[] args) {

@@ -180,7 +180,7 @@ public class Gui extends Application {
 
         fileName = bufferedReader.readLine();
         image = new Image(fileName);
-        //TODO den öppnar inte upp bilden, det blir tomt
+        setBackground(image);
 
         String line = bufferedReader.readLine();
         String[] objects = line.split(";");
@@ -282,15 +282,7 @@ public class Gui extends Application {
     File file = filechooser.showOpenDialog(stage);
     fileName = file.toURI().toString();
     image = new Image(fileName);
-    BackgroundImage backgroundImage = new BackgroundImage(
-            image,
-            BackgroundRepeat.NO_REPEAT,
-            BackgroundRepeat.NO_REPEAT,
-            BackgroundPosition.CENTER,
-            BackgroundSize.DEFAULT
-    );
-    root.setBackground(new Background(backgroundImage));
-    changeWindowSize(image.getWidth(),image.getHeight());
+    setBackground(image);
   }
 
   private void saveImage() {
@@ -325,6 +317,18 @@ public class Gui extends Application {
     } else {
       Platform.exit();
     }
+  }
+
+  private void setBackground(Image image) {
+    BackgroundImage backgroundImage = new BackgroundImage(
+            image,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundPosition.CENTER,
+            BackgroundSize.DEFAULT
+    );
+    root.setBackground(new Background(backgroundImage));
+    changeWindowSize(image.getWidth(),image.getHeight());
   }
 
   public static void main(String[] args) {

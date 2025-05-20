@@ -203,11 +203,19 @@ public class Gui extends Application {
           }
         }
       } else{
-        //TODO den blir lite konsigt för om man trycker på ok så gör den inget, så lite förvirrande uppbyggd
-        //TODO tycker kanske att om man trycker på OK så borde den gå till filechooser, eller att vi,
-        //TODO ändrar felmeddelandet
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You have unsaved changes", ButtonType.OK, ButtonType.CANCEL);
-        alert.showAndWait();
+        if(saveStatus) {
+          Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You have unsaved changes", ButtonType.OK, ButtonType.CANCEL);
+          alert.showAndWait();
+          if(alert.getResult() == ButtonType.OK) {
+            graph = new ListGraph<>();
+            locationGraph = new ListGraph<>();
+            saveStatus = false;
+            open();
+          } else if (alert.getResult() == ButtonType.CANCEL) {
+            alert.close();
+          }
+        }
+
       }
     }catch (IOException e){
       Alert alert = new Alert(Alert.AlertType.ERROR, "IO Error " + e.getMessage());

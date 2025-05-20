@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -12,9 +13,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.w3c.dom.Text;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -30,8 +31,8 @@ public class Gui extends Application {
   Graph<String> graph;
   Graph<Location> locationGraph;
   GridPane root;
-  boolean saveStatus = false;
   HBox hbox;
+  boolean saveStatus = false;
   //Gör det tydligt om programmet är sparat eller inte
 
   public void start(Stage stage) {
@@ -147,7 +148,10 @@ public class Gui extends Application {
     });
 
     hbox.getChildren().get(2).onMouseClickedProperty().setValue(event -> {
-      newPlace();
+      //TODO kollar om filename inte är null så att det finns en bakgrundsbild?
+      if (fileName != null) {
+        newPlace();
+      }
     });
 
     hbox.getChildren().get(3).onMouseClickedProperty().setValue(event -> {
@@ -158,10 +162,28 @@ public class Gui extends Application {
       hbox.setBackground(Background.fill(Color.BLACK));
     });
 
+    stage.setOnCloseRequest(event -> {
+      //TODO försökte med att använda exitprogrammetoden men det funkar inte riktigt
+      if (saveStatus) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You have unsaved changes", ButtonType.OK, ButtonType.CANCEL);
+        alert.setTitle("Unsaved changes");
+        alert.setHeaderText("You have unsaved changes");
+        alert.setContentText("Are you sure you want to exit?");
+        alert.showAndWait();
+        if (alert.getResult() == ButtonType.OK) {
+          Platform.exit();
+        } else {
+          event.consume();
+        }
+      }
+    });
+
     /*-----------------------------------------------------------------------------------*/
     Scene scene = new Scene(root);
     stage.setScene(scene);
     stage.show();
+    //ladda testfall
+    testFall();
   }
 
   private void changeWindowSize(double width, double height) {
@@ -206,7 +228,6 @@ public class Gui extends Application {
           }
         }
       } else{
-        if(saveStatus) {
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You have unsaved changes", ButtonType.OK, ButtonType.CANCEL);
           alert.showAndWait();
           if(alert.getResult() == ButtonType.OK) {
@@ -216,7 +237,6 @@ public class Gui extends Application {
           } else if (alert.getResult() == ButtonType.CANCEL) {
             alert.close();
           }
-        }
 
       }
     }catch (IOException e){
@@ -235,15 +255,6 @@ public class Gui extends Application {
       PrintWriter printWriter = new PrintWriter(fileWriter);
 
       printWriter.println(fileName);
-
-      Location location = new Location("sverige", 33,45);
-      locationGraph.add(location);
-
-      String node1 = "Stockholm";
-      String node2 = "Malmö";
-      graph.add(node1);
-      graph.add(node2);
-      graph.connect(node1, node2, "train", 4);
 
       for(Location l : locationGraph.getNodes()) {
         if(!locationGraph.getNodes().isEmpty()){
@@ -337,11 +348,26 @@ public class Gui extends Application {
     root.setCursor(Cursor.CROSSHAIR);
     hbox.getChildren().get(2).onMouseClickedProperty().setValue(null);
     root.setOnMouseClicked(mouseEvent -> {
+
       TextInputDialog newPlaceDialog = new TextInputDialog();
       newPlaceDialog.setTitle("Name");
       newPlaceDialog.setHeaderText("Name of place");
-      newPlaceDialog.showAndWait();
+
+      Optional<String> result = newPlaceDialog.showAndWait();
       String name = newPlaceDialog.getEditor().getText();
+
+      if(result.isPresent() && !name.isEmpty()){
+        int x = (int) mouseEvent.getX();
+        int y = (int) mouseEvent.getY();
+
+        Circle place = new Circle(x, y,5, Color.BLUE);
+        root.add(place, x, y);
+        //root.getChildren().add(place);
+      }
+      //TODO samt kolla om det finns en bild att klicka på
+      //TODO kan vara så att vi behöver göra en stackpane som vi sedan lägger gridpane (root) i,
+      //TODO för att sedan kunna lägga på cirklar, för just nu blir det fel i position, samt att den,
+      //TODO följer med rooten och inte stannar på bakgrundsbilden
     });
   }
 
@@ -352,5 +378,25 @@ public class Gui extends Application {
 
   public static void main(String[] args) {
     launch(args);
+  }
+
+  public void testFall() {
+    Location location1 = new Location("Stockholm", 33,45);
+    locationGraph.add(location1);
+
+    Location location2 = new Location("Malmö", 55, 60);
+    locationGraph.add(location2);
+
+    Location location3 = new Location("Göteborg", 120, 30);
+    locationGraph.add(location3);
+
+    String node1 = "Stockholm";
+    String node2 = "Malmö";
+    String node3 = "Göteborg";
+    graph.add(node1);
+    graph.add(node2);
+    graph.add(node3);
+    graph.connect(node1, node2, "train", 4);
+    graph.connect(node2, node3, "airplane", 2);
   }
 }

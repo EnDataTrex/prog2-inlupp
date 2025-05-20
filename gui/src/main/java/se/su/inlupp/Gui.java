@@ -36,8 +36,7 @@ public class Gui extends Application {
 
   public void start(Stage stage) {
     this.stage = stage;
-    locationGraph = new ListGraph<>();
-    graph = new ListGraph<>();
+    emptyGraphs();
 
     root = new GridPane(); //roten
     hbox = new HBox(); // till för "övriga" knappar
@@ -180,8 +179,7 @@ public class Gui extends Application {
         FileReader fileReader = new FileReader(file);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-        graph = new ListGraph<>();
-        locationGraph = new ListGraph<>();
+        emptyGraphs();
 
         fileName = bufferedReader.readLine();
         image = new Image(fileName);
@@ -212,8 +210,7 @@ public class Gui extends Application {
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You have unsaved changes", ButtonType.OK, ButtonType.CANCEL);
           alert.showAndWait();
           if(alert.getResult() == ButtonType.OK) {
-            graph = new ListGraph<>();
-            locationGraph = new ListGraph<>();
+            emptyGraphs();
             saveStatus = false;
             open();
           } else if (alert.getResult() == ButtonType.CANCEL) {
@@ -346,6 +343,11 @@ public class Gui extends Application {
       newPlaceDialog.showAndWait();
       String name = newPlaceDialog.getEditor().getText();
     });
+  }
+
+  private void emptyGraphs() {
+    graph = new ListGraph<>();
+    locationGraph = new ListGraph<>();
   }
 
   public static void main(String[] args) {

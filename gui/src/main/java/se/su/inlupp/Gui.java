@@ -14,6 +14,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.w3c.dom.Text;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -338,8 +340,11 @@ public class Gui extends Application {
     root.setCursor(Cursor.CROSSHAIR);
     hbox.getChildren().get(2).onMouseClickedProperty().setValue(null);
     root.setOnMouseClicked(mouseEvent -> {
-      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-      alert.setTitle("New Place");
+      TextInputDialog newPlaceDialog = new TextInputDialog();
+      newPlaceDialog.setTitle("Name");
+      newPlaceDialog.setHeaderText("Name of place");
+      newPlaceDialog.showAndWait();
+      String name = newPlaceDialog.getEditor().getText();
     });
   }
 

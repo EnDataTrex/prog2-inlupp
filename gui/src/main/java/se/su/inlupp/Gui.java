@@ -49,8 +49,6 @@ public class Gui extends Application {
     root.getChildren().addAll(gridPane);
 
     MenuButton menuBar = new MenuButton("File"); //till för menyknappar
-    //Behövs den? Den används aldrig
-    //MenuItem newMapmenu = new MenuItem("New Map");
 
     Label newMapLabel = new Label("New Map");
     newMapLabel.setPadding(new Insets(1, 30, 1, 1));
@@ -125,6 +123,7 @@ public class Gui extends Application {
     gridPane.setBackground(Background.fill(Color.LIGHTGREY)); //sätter bakgrund
     gridPane.add(menuBar, 0, 0); //lägger till menubar i roten
     gridPane.add(hbox, 0,1); //lägger till hbox i roten
+
     gridPane.setPadding(new Insets(10)); //sätter padding aka utrymme mellan rotens innehåll och kanter
 
     hbox.setBackground(Background.fill(Color.LIGHTBLUE)); //sätter "övriga knappars" bakgrund till blå
@@ -186,7 +185,6 @@ public class Gui extends Application {
 
     /*-----------------------------------------------------------------------------------*/
 
-    //Scene scene = new Scene(stackPane, 800, 600);
     Scene scene = new Scene(root);
     stage.setScene(scene);
     stage.show();

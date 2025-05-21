@@ -376,14 +376,8 @@ public class Gui extends Application {
 
         Circle place = new Circle(x, y,5, Color.BLUE);
         pane.getChildren().add(place);
-        //root.add(place, x, y);
-        //stackPane.getChildren().add(place);
-        //TODO den låter mig inte lägga till x, y (jag är osäker på hur man löser detta
         //root.getChildren().add(place);
       }
-      //TODO kan vara så att vi behöver göra en stackpane som vi sedan lägger gridpane (root) i,
-      //TODO för att sedan kunna lägga på cirklar, för just nu blir det fel i position, samt att den,
-      //TODO följer med rooten och inte stannar på bakgrundsbilden
       //root.setCursor(Cursor.DEFAULT);
       //hbox.getChildren().get(2).setDisable(false);
       //TODO den slutar inte sedan placera ut new place även om man trycker på andra knappar

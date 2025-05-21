@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -33,19 +32,21 @@ public class Gui extends Application {
   GridPane root;
   HBox hbox;
   boolean saveStatus = false;
-  StackPane stackPane;
+  //StackPane stackPane;
+  Pane pane;
   //Gör det tydligt om programmet är sparat eller inte
 
   public void start(Stage stage) {
+
     this.stage = stage;
     emptyGraphs();
 
-
     root = new GridPane(); //roten
     hbox = new HBox();
-    stackPane = new StackPane();// till för "övriga" knappar
-    stackPane.getChildren().add(root);
-    stackPane.getChildren().add(hbox);
+    //stackPane = new StackPane();// till för "övriga" knappar
+    pane = new Pane();
+
+    //stackPane.getChildren().addAll(root);
 
     MenuButton menuBar = new MenuButton("File"); //till för menyknappar
     //Behövs den? Den används aldrig
@@ -184,7 +185,9 @@ public class Gui extends Application {
     });
 
     /*-----------------------------------------------------------------------------------*/
-    Scene scene = new Scene(stackPane, 800, 600);
+
+    //Scene scene = new Scene(stackPane, 800, 600);
+    Scene scene = new Scene(root);
     stage.setScene(scene);
     stage.show();
     //ladda testfall
@@ -198,7 +201,6 @@ public class Gui extends Application {
 
   private void open() {
     try{
-    //Om det krånglar, kollar saveStatus
       if (!saveStatus) {
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(stage);
@@ -242,7 +244,6 @@ public class Gui extends Application {
           } else if (alert.getResult() == ButtonType.CANCEL) {
             alert.close();
           }
-
       }
     }catch (IOException e){
       Alert alert = new Alert(Alert.AlertType.ERROR, "IO Error " + e.getMessage());
@@ -301,6 +302,11 @@ public class Gui extends Application {
     fileName = file.toURI().toString();
     image = new Image(fileName);
     setBackground(image);
+
+    pane.setPrefSize(image.getWidth(), image.getHeight());
+
+    //root.add(pane, 0, 0);
+
   }
 
   private void saveImage() {
@@ -362,19 +368,22 @@ public class Gui extends Application {
       String name = newPlaceDialog.getEditor().getText();
 
       if(result.isPresent() && !name.isEmpty()){
-        int x = (int) mouseEvent.getX();
-        int y = (int) mouseEvent.getY();
+        double x = mouseEvent.getX();
+        double y = mouseEvent.getY();
 
         Circle place = new Circle(x, y,5, Color.BLUE);
-        root.add(place, x, y);
+        pane.getChildren().add(place);
+        //root.add(place, x, y);
         //stackPane.getChildren().add(place);
         //TODO den låter mig inte lägga till x, y (jag är osäker på hur man löser detta
         //root.getChildren().add(place);
       }
-      //TODO samt kolla om det finns en bild att klicka på
       //TODO kan vara så att vi behöver göra en stackpane som vi sedan lägger gridpane (root) i,
       //TODO för att sedan kunna lägga på cirklar, för just nu blir det fel i position, samt att den,
       //TODO följer med rooten och inte stannar på bakgrundsbilden
+      //root.setCursor(Cursor.DEFAULT);
+      //hbox.getChildren().get(2).setDisable(false);
+      //TODO den slutar inte sedan placera ut new place även om man trycker på andra knappar
     });
   }
 

@@ -305,7 +305,7 @@ public class Gui extends Application {
 
     pane.setPrefSize(image.getWidth(), image.getHeight());
 
-    //root.add(pane, 0, 0);
+    root.add(pane, 0, 0);
 
   }
 

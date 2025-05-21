@@ -303,9 +303,9 @@ public class Gui extends Application {
     image = new Image(fileName);
     setBackground(image);
 
-    //pane.setPrefSize(image.getWidth(), image.getHeight());
+    pane.setMaxSize(image.getWidth(), image.getHeight());
 
-    //root.add(pane, 0, 0);
+    root.getChildren().add(pane);
 
   }
 
@@ -356,9 +356,9 @@ public class Gui extends Application {
   }
 
   private void newPlace(){
-    gridPane.setCursor(Cursor.CROSSHAIR);
+    root.setCursor(Cursor.CROSSHAIR);
     hbox.getChildren().get(2).onMouseClickedProperty().setValue(null);
-    gridPane.setOnMouseClicked(mouseEvent -> {
+    pane.setOnMouseClicked(mouseEvent -> {
 
       TextInputDialog newPlaceDialog = new TextInputDialog();
       newPlaceDialog.setTitle("Name");

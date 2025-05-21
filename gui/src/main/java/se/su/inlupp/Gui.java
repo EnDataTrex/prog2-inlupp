@@ -29,10 +29,11 @@ public class Gui extends Application {
   Stage stage;
   Graph<String> graph;
   Graph<Location> locationGraph;
-  GridPane gridPane;
+  GridPane grid;
   HBox hbox;
   StackPane root;
   Pane pane;
+  GridPane gridImage;
   boolean saveStatus = false;
   //Gör det tydligt om programmet är sparat eller inte
 
@@ -41,12 +42,14 @@ public class Gui extends Application {
     this.stage = stage;
     emptyGraphs();
 
-    gridPane = new GridPane(); //roten
+    grid = new GridPane(); //roten
     hbox = new HBox();
     root = new StackPane();// till för "övriga" knappar
     pane = new Pane();
 
-    root.getChildren().addAll(gridPane);
+    StackPane.setAlignment(grid, Pos.TOP_CENTER);
+
+    root.getChildren().addAll(grid);
 
     MenuButton menuBar = new MenuButton("File"); //till för menyknappar
 
@@ -120,11 +123,10 @@ public class Gui extends Application {
     }
      */
 
-    gridPane.setBackground(Background.fill(Color.LIGHTGREY)); //sätter bakgrund
-    gridPane.add(menuBar, 0, 0); //lägger till menubar i roten
-    gridPane.add(hbox, 0,1); //lägger till hbox i roten
-
-    gridPane.setPadding(new Insets(10)); //sätter padding aka utrymme mellan rotens innehåll och kanter
+    grid.setBackground(Background.fill(Color.LIGHTGREY)); //sätter bakgrund
+    grid.add(menuBar, 0, 0); //lägger till menubar i roten
+    grid.add(hbox, 0,1); //lägger till hbox i roten
+    grid.setPadding(new Insets(10)); //sätter padding aka utrymme mellan rotens innehåll och kanter
 
     hbox.setBackground(Background.fill(Color.LIGHTBLUE)); //sätter "övriga knappars" bakgrund till blå
     hbox.setAlignment(Pos.CENTER); //centrerar de "övriga knapparna"
@@ -134,7 +136,7 @@ public class Gui extends Application {
 
     ColumnConstraints column1 = new ColumnConstraints(); //skapar kolumnernas constraints
     column1.setHgrow(Priority.ALWAYS); //Låter kolumnens längd växa dynamiskt
-    gridPane.getColumnConstraints().add(column1); //Lägger till det i roten
+    grid.getColumnConstraints().add(column1); //Lägger till det i roten
 
     ArrayList<String> elements = new ArrayList<>(Arrays.asList("Find Path", "Show Connection", "New Place", "New Connection", "Change Connection")); //Skapar lista med övriga knappar
     for (String element : elements) {
@@ -193,8 +195,8 @@ public class Gui extends Application {
   }
 
   private void changeWindowSize(double width, double height) {
-    stage.setMinHeight(height);
-    stage.setMinWidth(width);
+    gridImage.setMinHeight(height);
+    gridImage.setMinWidth(width);
   }
 
   private void open() {
@@ -303,6 +305,7 @@ public class Gui extends Application {
 
     pane.setMaxSize(image.getWidth(), image.getHeight());
 
+    StackPane.setAlignment(pane, Pos.CENTER);
     root.getChildren().add(pane);
 
   }
@@ -349,7 +352,9 @@ public class Gui extends Application {
             BackgroundPosition.CENTER,
             BackgroundSize.DEFAULT
     );
-    gridPane.setBackground(new Background(backgroundImage));
+    gridImage = new GridPane();
+    gridImage.setBackground(new Background(backgroundImage));
+    grid.add(gridImage, 0,10);
     changeWindowSize(image.getWidth(),image.getHeight());
   }
 

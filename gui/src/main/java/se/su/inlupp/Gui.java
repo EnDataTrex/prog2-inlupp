@@ -49,6 +49,9 @@ public class Gui extends Application {
     stack = new StackPane();// till för "övriga" knappar
     pane = new Pane();
 
+    root.setTop(grid);
+    root.setCenter(stack);
+
     MenuButton menuBar = new MenuButton("File"); //till för menyknappar
 
     Label newMapLabel = new Label("New Map");
@@ -185,8 +188,6 @@ public class Gui extends Application {
 
     /*-----------------------------------------------------------------------------------*/
 
-    root.setTop(grid);
-    root.setCenter(stack);
 
     Scene scene = new Scene(root);
     stage.setScene(scene);
@@ -303,7 +304,7 @@ public class Gui extends Application {
 
     pane.setMaxSize(image.getWidth(), image.getHeight());
 
-    StackPane.setAlignment(pane, Pos.CENTER);
+    stack.getChildren().add(pane);
 
     stage.sizeToScene();
   }

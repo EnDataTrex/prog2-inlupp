@@ -30,11 +30,16 @@ public class Gui extends Application {
   Graph<String> graph;
   Graph<Location> locationGraph;
   GridPane grid;
+  GridPane grid2;
   HBox hbox;
   StackPane root;
   Pane pane;
+  Pane imagePane;
   GridPane gridImage;
   boolean saveStatus = false;
+
+  ColumnConstraints columnConstraints;
+  RowConstraints rowConstraints;
   //Gör det tydligt om programmet är sparat eller inte
 
   public void start(Stage stage) {
@@ -42,13 +47,37 @@ public class Gui extends Application {
     this.stage = stage;
     emptyGraphs();
 
-    grid = new GridPane(); //roten
-    hbox = new HBox();
-    root = new StackPane();// till för "övriga" knappar
-    pane = new Pane();
+    root = new StackPane(); //Grunden
+    pane = new Pane();      //Där punkterna kommer hamna
+    grid = new GridPane();  //Grideen som innehåller image + hbox
+    grid2 = new GridPane(); //Den grideden som panen läggs på
+    imagePane = new Pane(); // där bilden läggs ELLER INTE KJ
+    hbox = new HBox();      //Menyn
+
 
     StackPane.setAlignment(grid, Pos.TOP_CENTER);
+    for(int i = 0; i < 4; i++ ){
+      columnConstraints = new ColumnConstraints();
+      columnConstraints.setPrefWidth(25);
+      grid.getColumnConstraints().add(columnConstraints);
 
+      rowConstraints = new RowConstraints();
+      rowConstraints.setPrefHeight(25);
+      grid.getRowConstraints().add(rowConstraints);
+
+      if(i == 0 || i == 3){
+        columnConstraints.setHgrow(Priority.ALWAYS);
+
+      }
+      else{
+        columnConstraints.setHgrow(Priority.NEVER);
+      }
+    }
+
+
+    grid.add(hbox, 0, 0, 5, 1);
+
+    //root.getChildren().addAll(grid); // roten där griden och det andra kommer hamna
     root.getChildren().addAll(grid);
 
     MenuButton menuBar = new MenuButton("File"); //till för menyknappar
@@ -125,7 +154,7 @@ public class Gui extends Application {
 
     grid.setBackground(Background.fill(Color.LIGHTGREY)); //sätter bakgrund
     grid.add(menuBar, 0, 0); //lägger till menubar i roten
-    grid.add(hbox, 0,1); //lägger till hbox i roten
+    //grid.add(hbox, 0,1); //lägger till hbox i roten
     grid.setPadding(new Insets(10)); //sätter padding aka utrymme mellan rotens innehåll och kanter
 
     hbox.setBackground(Background.fill(Color.LIGHTBLUE)); //sätter "övriga knappars" bakgrund till blå
@@ -134,9 +163,9 @@ public class Gui extends Application {
 
     GridPane.setMargin(menuBar, new Insets(0,0,10,0)); //sätter utrymme mellan boxar i griden
 
-    ColumnConstraints column1 = new ColumnConstraints(); //skapar kolumnernas constraints
-    column1.setHgrow(Priority.ALWAYS); //Låter kolumnens längd växa dynamiskt
-    grid.getColumnConstraints().add(column1); //Lägger till det i roten
+    //ColumnConstraints column1 = new ColumnConstraints(); //skapar kolumnernas constraints
+    //column1.setHgrow(Priority.ALWAYS); //Låter kolumnens längd växa dynamiskt
+    //grid.getColumnConstraints().add(column1); //Lägger till det i roten
 
     ArrayList<String> elements = new ArrayList<>(Arrays.asList("Find Path", "Show Connection", "New Place", "New Connection", "Change Connection")); //Skapar lista med övriga knappar
     for (String element : elements) {
@@ -306,7 +335,7 @@ public class Gui extends Application {
     pane.setMaxSize(image.getWidth(), image.getHeight());
 
     StackPane.setAlignment(pane, Pos.CENTER);
-    root.getChildren().add(pane);
+    grid.getChildren().add(pane);
 
   }
 
@@ -354,7 +383,7 @@ public class Gui extends Application {
     );
     gridImage = new GridPane();
     gridImage.setBackground(new Background(backgroundImage));
-    grid.add(gridImage, 0,10);
+    grid.add(gridImage, 1,1,2,2);
     changeWindowSize(image.getWidth(),image.getHeight());
   }
 

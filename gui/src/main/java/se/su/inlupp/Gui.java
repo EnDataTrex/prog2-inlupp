@@ -48,8 +48,9 @@ public class Gui extends Application {
     pane = new Pane();
 
     StackPane.setAlignment(grid, Pos.TOP_CENTER);
+    StackPane.setAlignment(gridImage, Pos.CENTER);
 
-    root.getChildren().addAll(grid);
+    root.getChildren().addAll(grid, gridImage);
 
     MenuButton menuBar = new MenuButton("File"); //till för menyknappar
 

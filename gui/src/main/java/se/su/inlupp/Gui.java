@@ -188,7 +188,6 @@ public class Gui extends Application {
 
     /*-----------------------------------------------------------------------------------*/
 
-
     Scene scene = new Scene(root);
     stage.setScene(scene);
     stage.show();
@@ -356,8 +355,8 @@ public class Gui extends Application {
   }
 
   private void changeWindowSize(double width, double height) {
-    gridImage.setMinHeight(height);
-    gridImage.setMinWidth(width);
+    stack.setMinHeight(height);
+    stack.setMinWidth(width);
   }
 
   private void newPlace(){

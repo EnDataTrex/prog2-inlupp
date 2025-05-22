@@ -31,9 +31,10 @@ public class Gui extends Application {
   Graph<Location> locationGraph;
   GridPane grid;
   HBox hbox;
-  StackPane root;
+  StackPane stack;
   Pane pane;
-  GridPane gridImage;
+  GridPane gridImage = new GridPane();
+  BorderPane root;
   boolean saveStatus = false;
   //Gör det tydligt om programmet är sparat eller inte
 
@@ -42,14 +43,11 @@ public class Gui extends Application {
     this.stage = stage;
     emptyGraphs();
 
-    grid = new GridPane(); //roten
+    root = new BorderPane(); //roten
+    grid = new GridPane();
     hbox = new HBox();
-    root = new StackPane();// till för "övriga" knappar
+    stack = new StackPane();// till för "övriga" knappar
     pane = new Pane();
-
-    StackPane.setAlignment(grid, Pos.TOP_CENTER);
-
-    root.getChildren().addAll(grid);
 
     MenuButton menuBar = new MenuButton("File"); //till för menyknappar
 
@@ -187,16 +185,14 @@ public class Gui extends Application {
 
     /*-----------------------------------------------------------------------------------*/
 
+    root.setTop(grid);
+    root.setCenter(stack);
+
     Scene scene = new Scene(root);
     stage.setScene(scene);
     stage.show();
     //ladda testfall
     testFall();
-  }
-
-  private void changeWindowSize(double width, double height) {
-    gridImage.setMinHeight(height);
-    gridImage.setMinWidth(width);
   }
 
   private void open() {
@@ -299,20 +295,22 @@ public class Gui extends Application {
   private void newMap() {
     FileChooser filechooser = new FileChooser();
     File file = filechooser.showOpenDialog(stage);
+
     fileName = file.toURI().toString();
     image = new Image(fileName);
+
     setBackground(image);
 
     pane.setMaxSize(image.getWidth(), image.getHeight());
 
     StackPane.setAlignment(pane, Pos.CENTER);
-    root.getChildren().add(pane);
 
+    stage.sizeToScene();
   }
 
   private void saveImage() {
     try {
-      WritableImage image = root.snapshot(null, null);
+      WritableImage image = stack.snapshot(null, null);
       BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
       ImageIO.write(bufferedImage, "png", new File("capture.png"));
     } catch (IOException e){
@@ -352,10 +350,13 @@ public class Gui extends Application {
             BackgroundPosition.CENTER,
             BackgroundSize.DEFAULT
     );
-    gridImage = new GridPane();
-    gridImage.setBackground(new Background(backgroundImage));
-    grid.add(gridImage, 0,10);
-    changeWindowSize(image.getWidth(),image.getHeight());
+    changeWindowSize(image.getWidth(), image.getHeight());
+    stack.setBackground(new Background(backgroundImage));
+  }
+
+  private void changeWindowSize(double width, double height) {
+    gridImage.setMinHeight(height);
+    gridImage.setMinWidth(width);
   }
 
   private void newPlace(){

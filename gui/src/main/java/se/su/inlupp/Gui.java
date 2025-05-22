@@ -36,6 +36,8 @@ public class Gui extends Application {
   GridPane gridImage = new GridPane();
   BorderPane root;
   boolean saveStatus = false;
+  VBox vboxLeft;
+  VBox vboxRight;
   //Gör det tydligt om programmet är sparat eller inte
 
   public void start(Stage stage) {
@@ -48,9 +50,11 @@ public class Gui extends Application {
     hbox = new HBox();
     stack = new StackPane();// till för "övriga" knappar
     pane = new Pane();
-
+    vboxLeft = new VBox();
+    vboxRight = new VBox();
     root.setTop(grid);
     root.setCenter(stack);
+    root.setBackground(Background.fill(Color.LIGHTBLUE));
 
     MenuButton menuBar = new MenuButton("File"); //till för menyknappar
 
@@ -169,6 +173,8 @@ public class Gui extends Application {
     hbox.getChildren().get(4).onMouseClickedProperty().setValue(event -> {
       hbox.setBackground(Background.fill(Color.BLACK));
     });
+
+
 
     stage.setOnCloseRequest(event -> {
       //TODO försökte med att använda exitprogrammetoden men det funkar inte riktigt
@@ -297,7 +303,7 @@ public class Gui extends Application {
     File file = filechooser.showOpenDialog(stage);
 
     fileName = file.toURI().toString();
-    image = new Image(fileName);
+    image = new Image(fileName, false);
 
     setBackground(image);
 
@@ -305,6 +311,8 @@ public class Gui extends Application {
 
     stack.getChildren().add(pane);
 
+    stage.setMinWidth(image.getWidth() + 10);
+    stage.setMinHeight(image.getHeight() + 10);
     stage.sizeToScene();
   }
 
@@ -355,8 +363,10 @@ public class Gui extends Application {
   }
 
   private void changeWindowSize(double width, double height) {
-    stack.setMinHeight(height);
-    stack.setMinWidth(width);
+      stack.setMinHeight(image.getHeight());
+      stack.setMinWidth(image.getWidth());
+
+
   }
 
   private void newPlace(){

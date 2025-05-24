@@ -175,7 +175,23 @@ public class Gui extends Application {
       hbox.setBackground(Background.fill(Color.BLACK));
     });
 
-
+    System.out.println("Handler");
+    //TODO nu ligger klick på stack, pane funkar inte
+    //kan bero på att vi sätter den till null new place
+    stack.setOnMouseClicked(mouseEvent -> {
+      System.out.println("klick!");
+      double x = mouseEvent.getX();
+      double y = mouseEvent.getY();
+      for(Location l : locationGraph.getNodes()) {
+        double differenceX = l.getX() - x;
+        double differenceY = l.getY() - y;
+        if((Math.abs(differenceX - l.getX()) < 10) && (Math.abs(differenceY - l.getY()) < 10)){
+          Circle place = new Circle(l.getX(), l.getY(),5, Color.DARKRED);
+          pane.getChildren().add(place);
+          place.setOnMouseClicked(mouseEvent1 -> place.setFill(Color.BLUE));
+        }
+      }
+    });
 
     stage.setOnCloseRequest(event -> {
       //TODO försökte med att använda exitprogrammetoden men det funkar inte riktigt
@@ -365,10 +381,8 @@ public class Gui extends Application {
   }
 
   private void changeWindowSize(double width, double height) {
-      stack.setMinHeight(image.getHeight());
-      stack.setMinWidth(image.getWidth());
-
-
+      stack.setMinHeight(height);
+      stack.setMinWidth(width);
   }
 
   private void newPlace(){
@@ -413,6 +427,7 @@ public class Gui extends Application {
     locationGraph = new ListGraph<>();
   }
 
+  /*
   public void markedPlace(){
     pane.setOnMouseClicked(mouseEvent -> {
       double x = mouseEvent.getX();
@@ -427,6 +442,8 @@ public class Gui extends Application {
       }
     });
   }
+
+   */
 
   public static void main(String[] args) {
     launch(args);

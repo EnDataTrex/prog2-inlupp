@@ -38,6 +38,7 @@ public class Gui extends Application {
   VBox vboxLeft;
   VBox vboxRight;
   ArrayList<String> elements;
+  Circle[] markedPlaces;
   //Gör det tydligt om programmet är sparat eller inte
 
   public void start(Stage stage) {
@@ -55,7 +56,6 @@ public class Gui extends Application {
 
     root.setTop(grid);
     root.setCenter(stack);
-    root.setBackground(Background.fill(Color.LIGHTBLUE));
 
     stack.getChildren().add(pane);
 
@@ -155,14 +155,19 @@ public class Gui extends Application {
 
     /*----------------------------------------------------------------------------------------------*/
     hbox.getChildren().get(0).onMouseClickedProperty().setValue(event -> {
-      hbox.setBackground(Background.fill(Color.DARKRED));
+      //hbox.setStyle("-fx-background-color: #ffeded; ");
+      //root.setStyle("-fx-background-color: #ffeded");
+      hbox.setBackground(Background.fill(Color.LIGHTBLUE));
+      root.setBackground(Background.fill(Color.LIGHTBLUE));
     });
 
     hbox.getChildren().get(1).onMouseClickedProperty().setValue(event -> {
       hbox.setBackground(Background.fill(Color.LIGHTBLUE));
+      root.setBackground(Background.fill(Color.LIGHTBLUE));
     });
 
     hbox.getChildren().get(2).onMouseClickedProperty().setValue(event -> {
+      root.setBackground(Background.fill(Color.YELLOW));
       //TODO kollar om filename inte är null så att det finns en bakgrundsbild?
       if (fileName != null) {
         newPlace();
@@ -171,10 +176,14 @@ public class Gui extends Application {
 
     hbox.getChildren().get(3).onMouseClickedProperty().setValue(event -> {
       hbox.setBackground(Background.fill(Color.PURPLE));
+      root.setBackground(Background.fill(Color.PURPLE));
+      newConnection();
     });
 
     hbox.getChildren().get(4).onMouseClickedProperty().setValue(event -> {
       hbox.setBackground(Background.fill(Color.BLACK));
+      root.setBackground(Background.fill(Color.BLACK));
+
     });
 
     //TODO nu ligger klick på stack, pane funkar inte
@@ -432,20 +441,39 @@ public class Gui extends Application {
   }
 
   public void markPlace() {
+    markedPlaces = new Circle[2];
     pane.setOnMouseClicked(mouseEvent -> {
-      System.out.println("Klick!");
       double x = mouseEvent.getX();
       double y = mouseEvent.getY();
+
       for (Location l : locationGraph.getNodes()) {
         double differenceX = x - l.getX();
         double differenceY = y - l.getY();
         if ((differenceX < 1) && (differenceY < 1)) {
           Circle place = new Circle(l.getX(), l.getY(), 10, Color.DARKRED);
-          pane.getChildren().add(place);
-          place.setOnMouseClicked(mouseEvent1 -> place.setFill(Color.BLUE));
+          for (int i = 0; i < markedPlaces.length; i++) {
+            if (markedPlaces[i].getCenterX() == l.getX() && markedPlaces[i].getCenterY() == l.getY()) {
+              markedPlaces[i] = new Circle(l.getX(), l.getY(), 7, Color.BLUE);
+              markedPlaces[i] = null;
+            }
+            if (markedPlaces[i] == null) {
+              markedPlaces[i] = place;
+              pane.getChildren().add(markedPlaces[i]);
+            }
+          }
         }
       }
     });
+  }
+
+  public void newConnection(){
+      if (markedPlaces[0] == null || markedPlaces[1] == null) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText("Connection Error");
+        alert.setContentText("Two places are not marked");
+        alert.showAndWait();
+    }
   }
 
   public static void main(String[] args) {

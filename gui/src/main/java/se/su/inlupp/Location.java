@@ -10,7 +10,6 @@ public class Location {
         this.y = y;
     }
 
-
     public String getName() {
         return name;
     }

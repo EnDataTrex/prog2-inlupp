@@ -142,9 +142,9 @@ public class Gui extends Application {
 
     GridPane.setMargin(menuBar, new Insets(0,0,10,0)); //sätter utrymme mellan boxar i griden
 
-    ColumnConstraints column1 = new ColumnConstraints(); //skapar kolumnernas constraints
-    column1.setHgrow(Priority.ALWAYS); //Låter kolumnens längd växa dynamiskt
-    grid.getColumnConstraints().add(column1); //Lägger till det i roten
+    ColumnConstraints column = new ColumnConstraints(); //skapar kolumnernas constraints
+    column.setHgrow(Priority.ALWAYS); //Låter kolumnens längd växa dynamiskt
+    grid.getColumnConstraints().add(column); //Lägger till det i roten
 
     elements = new ArrayList<>(Arrays.asList("Find Path", "Show Connection", "New Place", "New Connection", "Change Connection")); //Skapar lista med övriga knappar
     for (String element : elements) {
@@ -177,7 +177,6 @@ public class Gui extends Application {
       hbox.setBackground(Background.fill(Color.BLACK));
     });
 
-    System.out.println("Handler");
     //TODO nu ligger klick på stack, pane funkar inte
     //kan bero på att vi sätter den till null new place
     pane.setOnMouseClicked(mouseEvent -> {
@@ -232,11 +231,8 @@ public class Gui extends Application {
         emptyGraphs();
 
         fileName = bufferedReader.readLine();
-
         image = new Image(fileName, false);
-
         setBackground(image);
-
         setStageSize();
 
         String line = bufferedReader.readLine();
@@ -339,14 +335,14 @@ public class Gui extends Application {
   }
 
   private void setStageSize(){
+    pane.setMinSize(image.getWidth(), image.getHeight());
     pane.setMaxSize(image.getWidth(), image.getHeight());
 
-    stack.setMinSize(image.getWidth(), image.getHeight());
+    //hittade inget annat sätt än att hårdkoda med 50
+    stage.setMinHeight(image.getHeight() + grid.getHeight() + 50);
+    stage.setMinWidth(image.getWidth() + 50);
 
-    stage.setMinHeight(image.getHeight() + grid.getHeight());
-    stage.setMinWidth(image.getWidth());
-
-    stage.sizeToScene();
+    //stage.sizeToScene();
   }
 
   //kändes onödig när jag ändå flyttade ut den koden över  setstagestage så la till de två raderna,
@@ -357,6 +353,7 @@ public class Gui extends Application {
   //}
 
   private void setBackground(Image image) {
+    pane.getChildren().clear();
     BackgroundImage backgroundImage = new BackgroundImage(
             image,
             BackgroundRepeat.NO_REPEAT,
@@ -367,9 +364,7 @@ public class Gui extends Application {
     //changeWindowSize(image.getWidth(), image.getHeight());
     setStageSize();
     stack.setBackground(new Background(backgroundImage));
-    pane.getChildren().clear();
   }
-
 
   private void saveImage() {
     try {

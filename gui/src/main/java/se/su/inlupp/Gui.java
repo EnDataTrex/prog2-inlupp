@@ -179,20 +179,8 @@ public class Gui extends Application {
 
     //TODO nu ligger klick på stack, pane funkar inte
     //kan bero på att vi sätter den till null new place
-    pane.setOnMouseClicked(mouseEvent -> {
-      System.out.println("klick!");
-      double x = mouseEvent.getX();
-      double y = mouseEvent.getY();
-      for(Location l : locationGraph.getNodes()) {
-        double differenceX = l.getX() - x;
-        double differenceY = l.getY() - y;
-        if((Math.abs(differenceX - l.getX()) < 10) && (Math.abs(differenceY - l.getY()) < 10)){
-          Circle place = new Circle(l.getX(), l.getY(),5, Color.DARKRED);
-          pane.getChildren().add(place);
-          place.setOnMouseClicked(mouseEvent1 -> place.setFill(Color.BLUE));
-        }
-      }
-    });
+
+    markPlace();
 
     stage.setOnCloseRequest(event -> {
       //TODO försökte med att använda exitprogrammetoden men det funkar inte riktigt
@@ -244,7 +232,8 @@ public class Gui extends Application {
           Location location = new Location(name, x, y);
           locationGraph.add(location);
 
-          Circle circle = new Circle(location.getX(), location.getY(), 5, Color.BLUE);
+          //skulle kunna göra en metod för att måla ut punkter då vi ockdå gör den i new place
+          Circle circle = new Circle(location.getX(), location.getY(), 7, Color.BLUE);
           pane.getChildren().add(circle);
         }
 
@@ -420,7 +409,7 @@ public class Gui extends Application {
         double x = mouseEvent.getX();
         double y = mouseEvent.getY();
 
-        Circle place = new Circle(x, y,5, Color.BLUE);
+        Circle place = new Circle(x, y,7, Color.BLUE);
         pane.getChildren().add(place);
 
         //Lägger till punkten i listan
@@ -442,23 +431,22 @@ public class Gui extends Application {
     locationGraph = new ListGraph<>();
   }
 
-  /*
-  public void markedPlace(){
+  public void markPlace() {
     pane.setOnMouseClicked(mouseEvent -> {
+      System.out.println("Klick!");
       double x = mouseEvent.getX();
       double y = mouseEvent.getY();
-      for(Location l : locationGraph.getNodes()) {
-        double differenceX = l.getX() - x;
-        double differenceY = l.getY() - y;
-        if(Math.abs(differenceX - l.getX()) < 10 && Math.abs(differenceY - l.getY()) < 10){
-         Circle place = new Circle(l.getX(), l.getY(),5, Color.DARKRED);
-         place.setOnMouseClicked(mouseEvent1 -> place.setFill(Color.BLUE));
+      for (Location l : locationGraph.getNodes()) {
+        double differenceX = x - l.getX();
+        double differenceY = y - l.getY();
+        if ((differenceX < 1) && (differenceY < 1)) {
+          Circle place = new Circle(l.getX(), l.getY(), 10, Color.DARKRED);
+          pane.getChildren().add(place);
+          place.setOnMouseClicked(mouseEvent1 -> place.setFill(Color.BLUE));
         }
       }
     });
   }
-
-   */
 
   public static void main(String[] args) {
     launch(args);

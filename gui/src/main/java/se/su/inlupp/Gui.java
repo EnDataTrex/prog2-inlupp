@@ -33,7 +33,6 @@ public class Gui extends Application {
   HBox hbox;
   StackPane stack;
   Pane pane;
-  GridPane gridImage = new GridPane();
   BorderPane root;
   boolean saveStatus = false;
   VBox vboxLeft;
@@ -311,8 +310,12 @@ public class Gui extends Application {
 
     stack.getChildren().add(pane);
 
-    stage.setMinWidth(image.getWidth() + 10);
-    stage.setMinHeight(image.getHeight() + 10);
+    //stage.setMinWidth(image.getWidth() + 10);
+    //stage.setMinHeight(image.getHeight() + 10);
+
+    stage.setMinHeight(image.getHeight() + grid.getHeight());
+    stage.setMinWidth(image.getWidth());
+
     stage.sizeToScene();
   }
 

@@ -174,8 +174,6 @@ public class Gui extends Application {
       hbox.setBackground(Background.fill(Color.BLACK));
     });
 
-
-
     stage.setOnCloseRequest(event -> {
       //TODO försökte med att använda exitprogrammetoden men det funkar inte riktigt
       if (saveStatus) {
@@ -311,9 +309,6 @@ public class Gui extends Application {
 
     stack.getChildren().add(pane);
 
-    //stage.setMinWidth(image.getWidth() + 10);
-    //stage.setMinHeight(image.getHeight() + 10);
-
     stage.setMinHeight(image.getHeight() + grid.getHeight());
     stage.setMinWidth(image.getWidth());
 
@@ -399,6 +394,8 @@ public class Gui extends Application {
         //Lägger till punkten i listan
         Location location = new Location(name, x, y);
         locationGraph.add(location);
+
+        pane.setOnMouseClicked(null);
         root.setCursor(Cursor.DEFAULT);
       }
       for (String e : elements) {

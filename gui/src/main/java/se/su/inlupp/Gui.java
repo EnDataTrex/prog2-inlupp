@@ -387,6 +387,10 @@ public class Gui extends Application {
 
         Circle place = new Circle(x, y,5, Color.BLUE);
         pane.getChildren().add(place);
+
+        //Lägger till punkten i listan
+        Location location = new Location(name, x, y);
+        locationGraph.add(location);
         //root.getChildren().add(place);
       }
       //root.setCursor(Cursor.DEFAULT);

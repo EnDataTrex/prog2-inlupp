@@ -37,6 +37,7 @@ public class Gui extends Application {
   boolean saveStatus = false;
   VBox vboxLeft;
   VBox vboxRight;
+  ArrayList<String> elements;
   //Gör det tydligt om programmet är sparat eller inte
 
   public void start(Stage stage) {
@@ -142,7 +143,7 @@ public class Gui extends Application {
     column1.setHgrow(Priority.ALWAYS); //Låter kolumnens längd växa dynamiskt
     grid.getColumnConstraints().add(column1); //Lägger till det i roten
 
-    ArrayList<String> elements = new ArrayList<>(Arrays.asList("Find Path", "Show Connection", "New Place", "New Connection", "Change Connection")); //Skapar lista med övriga knappar
+    elements = new ArrayList<>(Arrays.asList("Find Path", "Show Connection", "New Place", "New Connection", "Change Connection")); //Skapar lista med övriga knappar
     for (String element : elements) {
       Button button = new Button(element);//skapar ny knapp
       button.setBackground(Background.fill(Color.FLORALWHITE)); //sätter färg
@@ -374,7 +375,11 @@ public class Gui extends Application {
 
   private void newPlace(){
     root.setCursor(Cursor.CROSSHAIR);
-    hbox.getChildren().get(2).setDisable(true);
+
+    for (String e : elements) {
+      hbox.getChildren().get(elements.indexOf(e)).setDisable(true);
+    }
+
     pane.setOnMouseClicked(mouseEvent -> {
 
       TextInputDialog newPlaceDialog = new TextInputDialog();
@@ -395,7 +400,10 @@ public class Gui extends Application {
         Location location = new Location(name, x, y);
         locationGraph.add(location);
         root.setCursor(Cursor.DEFAULT);
-        hbox.getChildren().get(2).setDisable(false);
+
+        for (String e : elements) {
+          hbox.getChildren().get(elements.indexOf(e)).setDisable(false);
+        }
       }
       //TODO den slutar inte sedan placera ut new place även om man trycker på andra knappar
     });

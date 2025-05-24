@@ -341,11 +341,35 @@ public class Gui extends Application {
   private void setStageSize(){
     pane.setMaxSize(image.getWidth(), image.getHeight());
 
+    stack.setMinSize(image.getWidth(), image.getHeight());
+
     stage.setMinHeight(image.getHeight() + grid.getHeight());
     stage.setMinWidth(image.getWidth());
 
     stage.sizeToScene();
   }
+
+  //kändes onödig när jag ändå flyttade ut den koden över  setstagestage så la till de två raderna,
+  //kod där istället
+  //private void changeWindowSize(double width, double height) {
+    //stack.setMinHeight(height);
+    //stack.setMinWidth(width);
+  //}
+
+  private void setBackground(Image image) {
+    BackgroundImage backgroundImage = new BackgroundImage(
+            image,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundPosition.CENTER,
+            BackgroundSize.DEFAULT
+    );
+    //changeWindowSize(image.getWidth(), image.getHeight());
+    setStageSize();
+    stack.setBackground(new Background(backgroundImage));
+    pane.getChildren().clear();
+  }
+
 
   private void saveImage() {
     try {
@@ -379,24 +403,6 @@ public class Gui extends Application {
     } else {
       Platform.exit();
     }
-  }
-
-  private void setBackground(Image image) {
-    BackgroundImage backgroundImage = new BackgroundImage(
-            image,
-            BackgroundRepeat.NO_REPEAT,
-            BackgroundRepeat.NO_REPEAT,
-            BackgroundPosition.CENTER,
-            BackgroundSize.DEFAULT
-    );
-    changeWindowSize(image.getWidth(), image.getHeight());
-    stack.setBackground(new Background(backgroundImage));
-    pane.getChildren().clear();
-  }
-
-  private void changeWindowSize(double width, double height) {
-      stack.setMinHeight(height);
-      stack.setMinWidth(width);
   }
 
   private void newPlace(){

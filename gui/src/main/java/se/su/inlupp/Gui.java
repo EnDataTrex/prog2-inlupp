@@ -374,7 +374,7 @@ public class Gui extends Application {
 
   private void newPlace(){
     root.setCursor(Cursor.CROSSHAIR);
-    hbox.getChildren().get(2).onMouseClickedProperty().setValue(null);
+    hbox.getChildren().get(2).setDisable(true);
     pane.setOnMouseClicked(mouseEvent -> {
 
       TextInputDialog newPlaceDialog = new TextInputDialog();
@@ -394,10 +394,9 @@ public class Gui extends Application {
         //Lägger till punkten i listan
         Location location = new Location(name, x, y);
         locationGraph.add(location);
-        //root.getChildren().add(place);
+        root.setCursor(Cursor.DEFAULT);
+        hbox.getChildren().get(2).setDisable(false);
       }
-      //root.setCursor(Cursor.DEFAULT);
-      //hbox.getChildren().get(2).setDisable(false);
       //TODO den slutar inte sedan placera ut new place även om man trycker på andra knappar
     });
   }

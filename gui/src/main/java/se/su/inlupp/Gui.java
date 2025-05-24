@@ -22,7 +22,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
-import java.math.*;
 
 public class Gui extends Application {
   Image image;

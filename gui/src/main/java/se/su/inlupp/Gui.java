@@ -52,9 +52,12 @@ public class Gui extends Application {
     pane = new Pane();
     vboxLeft = new VBox();
     vboxRight = new VBox();
+
     root.setTop(grid);
     root.setCenter(stack);
     root.setBackground(Background.fill(Color.LIGHTBLUE));
+
+    stack.getChildren().add(pane);
 
     MenuButton menuBar = new MenuButton("File"); //till för menyknappar
 
@@ -229,8 +232,12 @@ public class Gui extends Application {
         emptyGraphs();
 
         fileName = bufferedReader.readLine();
-        image = new Image(fileName);
+
+        image = new Image(fileName, false);
+
         setBackground(image);
+
+        setStageSize();
 
         String line = bufferedReader.readLine();
         String[] objects = line.split(";");
@@ -240,9 +247,10 @@ public class Gui extends Application {
           double y = Double.parseDouble(objects[i+2]);
           Location location = new Location(name, x, y);
           locationGraph.add(location);
-        }
 
-        //TODO rita ut cirklar
+          Circle circle = new Circle(location.getX(), location.getY(), 5, Color.BLUE);
+          pane.getChildren().add(circle);
+        }
 
         while((line = bufferedReader.readLine()) != null) {
           objects = line.split(";");
@@ -252,6 +260,8 @@ public class Gui extends Application {
           int weight = Integer.parseInt(objects[3]);
           if(graph.getEdgeBetween(from, to) == null) {
             graph.connect(from, to, edge, weight);
+
+            //TODO när vi gjort connection, lägg till linjer mellan cirklar
           }
         }
       } else{
@@ -325,9 +335,11 @@ public class Gui extends Application {
 
     setBackground(image);
 
-    pane.setMaxSize(image.getWidth(), image.getHeight());
+    setStageSize();
+  }
 
-    stack.getChildren().add(pane);
+  private void setStageSize(){
+    pane.setMaxSize(image.getWidth(), image.getHeight());
 
     stage.setMinHeight(image.getHeight() + grid.getHeight());
     stage.setMinWidth(image.getWidth());
@@ -379,6 +391,7 @@ public class Gui extends Application {
     );
     changeWindowSize(image.getWidth(), image.getHeight());
     stack.setBackground(new Background(backgroundImage));
+    pane.getChildren().clear();
   }
 
   private void changeWindowSize(double width, double height) {

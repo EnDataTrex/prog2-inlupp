@@ -400,10 +400,9 @@ public class Gui extends Application {
         Location location = new Location(name, x, y);
         locationGraph.add(location);
         root.setCursor(Cursor.DEFAULT);
-
-        for (String e : elements) {
-          hbox.getChildren().get(elements.indexOf(e)).setDisable(false);
-        }
+      }
+      for (String e : elements) {
+        hbox.getChildren().get(elements.indexOf(e)).setDisable(false);
       }
       //TODO den slutar inte sedan placera ut new place även om man trycker på andra knappar
     });

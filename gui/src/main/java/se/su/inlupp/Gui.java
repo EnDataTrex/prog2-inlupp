@@ -178,7 +178,7 @@ public class Gui extends Application {
     System.out.println("Handler");
     //TODO nu ligger klick på stack, pane funkar inte
     //kan bero på att vi sätter den till null new place
-    stack.setOnMouseClicked(mouseEvent -> {
+    pane.setOnMouseClicked(mouseEvent -> {
       System.out.println("klick!");
       double x = mouseEvent.getX();
       double y = mouseEvent.getY();
@@ -215,7 +215,7 @@ public class Gui extends Application {
     stage.setScene(scene);
     stage.show();
     //ladda testfall
-    testFall();
+    //testFall();
   }
 
   private void open() {
@@ -242,6 +242,8 @@ public class Gui extends Application {
           Location location = new Location(name, x, y);
           locationGraph.add(location);
         }
+
+        //TODO rita ut cirklar
 
         while((line = bufferedReader.readLine()) != null) {
           objects = line.split(";");

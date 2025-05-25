@@ -68,8 +68,8 @@ public class Gui extends Application {
       newMap();
       saveStatus = true;
     });
-    CustomMenuItem customMenuItem = new CustomMenuItem(newMapLabel);
-    menuBar.getItems().add(customMenuItem);
+    CustomMenuItem menuItemNewMap = new CustomMenuItem(newMapLabel);
+    menuBar.getItems().add(menuItemNewMap);
     //-------------------------------------------------------------------------------//
     /* Sätt bilen till fixed, och se till att fönstrets minimi storlek är anpassad till den så
     * den alltid är synlig, men se också till att weight/alignment är anpassat till resten av fönstret
@@ -79,10 +79,10 @@ public class Gui extends Application {
     openLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
     openLabel.setOnMouseClicked(event -> {
       open();
-      //TODO ändra savestatus?
+      saveStatus = true;
     });
-    CustomMenuItem customMenuItem2 = new CustomMenuItem(openLabel);
-    menuBar.getItems().add(customMenuItem2);
+    CustomMenuItem menuItemOpen = new CustomMenuItem(openLabel);
+    menuBar.getItems().add(menuItemOpen);
     //-------------------------------------------------------------------------------//
     Label saveLabel = new Label("Save");
     saveLabel.setPadding(new Insets(1, 30, 1, 1));
@@ -91,8 +91,8 @@ public class Gui extends Application {
         save();
         saveStatus = false;
       });
-    CustomMenuItem customMenuItem3 = new CustomMenuItem(saveLabel);
-    menuBar.getItems().add(customMenuItem3);
+    CustomMenuItem menuItemSave = new CustomMenuItem(saveLabel);
+    menuBar.getItems().add(menuItemSave);
 
     Label saveImageLabel = new Label("Save Image");
     saveImageLabel.setPadding(new Insets(1, 30, 1, 1));
@@ -100,8 +100,8 @@ public class Gui extends Application {
     saveImageLabel.setOnMouseClicked(event -> {
       saveImage();
     });
-    CustomMenuItem customMenuItem4 = new CustomMenuItem(saveImageLabel);
-    menuBar.getItems().add(customMenuItem4);
+    CustomMenuItem menuItemSaveImage = new CustomMenuItem(saveImageLabel);
+    menuBar.getItems().add(menuItemSaveImage);
 
     Label exitLabel = new Label("Exit");
     exitLabel.setPadding(new Insets(1, 30, 1, 1));
@@ -111,8 +111,8 @@ public class Gui extends Application {
       event.consume(); //Om vilkoren inte uppnåtts (aka) om man klickar på cancel så stängs fönstret ner
 
     });
-    CustomMenuItem customMenuItem5 = new CustomMenuItem(exitLabel);
-    menuBar.getItems().add(customMenuItem5);
+    CustomMenuItem menuItemExit = new CustomMenuItem(exitLabel);
+    menuBar.getItems().add(menuItemExit);
 
     //två problem:
     //1. klickytan är begränsad till texten, vilket skapar en inte helt användarvanlig funktion,
@@ -154,18 +154,19 @@ public class Gui extends Application {
     }
 
     /*----------------------------------------------------------------------------------------------*/
+    //newMap
     hbox.getChildren().get(0).onMouseClickedProperty().setValue(event -> {
-      //hbox.setStyle("-fx-background-color: #ffeded; ");
-      //root.setStyle("-fx-background-color: #ffeded");
       hbox.setBackground(Background.fill(Color.LIGHTBLUE));
       root.setBackground(Background.fill(Color.LIGHTBLUE));
     });
 
+    //Open
     hbox.getChildren().get(1).onMouseClickedProperty().setValue(event -> {
       hbox.setBackground(Background.fill(Color.LIGHTBLUE));
       root.setBackground(Background.fill(Color.LIGHTBLUE));
     });
 
+    //Save
     hbox.getChildren().get(2).onMouseClickedProperty().setValue(event -> {
       root.setBackground(Background.fill(Color.YELLOW));
       //TODO kollar om filename inte är null så att det finns en bakgrundsbild?
@@ -174,12 +175,14 @@ public class Gui extends Application {
       }
     });
 
+    //SaveImage
     hbox.getChildren().get(3).onMouseClickedProperty().setValue(event -> {
       hbox.setBackground(Background.fill(Color.PURPLE));
       root.setBackground(Background.fill(Color.PURPLE));
       newConnection();
     });
 
+    //Exit
     hbox.getChildren().get(4).onMouseClickedProperty().setValue(event -> {
       hbox.setBackground(Background.fill(Color.BLACK));
       root.setBackground(Background.fill(Color.BLACK));

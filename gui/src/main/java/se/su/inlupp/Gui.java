@@ -149,7 +149,8 @@ public class Gui extends Application {
     elements = new ArrayList<>(Arrays.asList("Find Path", "Show Connection", "New Place", "New Connection", "Change Connection")); //Skapar lista med övriga knappar
     for (String element : elements) {
       Button button = new Button(element);//skapar ny knapp
-      button.setBackground(Background.fill(Color.FLORALWHITE)); //sätter färg
+      button.setStyle("-fx-background-color: floralwhite; -fx-border-color: darkgray;");
+      //button.setBackground(Background.fill(Color.FLORALWHITE)); //sätter färg
       hbox.getChildren().add(button); //lägger till den som ett barn i hbox
     }
 

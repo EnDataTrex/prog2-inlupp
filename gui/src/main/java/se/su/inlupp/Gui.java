@@ -448,20 +448,38 @@ public class Gui extends Application {
     pane.setOnMouseClicked(mouseEvent -> {
       double x = mouseEvent.getX();
       double y = mouseEvent.getY();
-
+      //kollar igenom locationGraph med alla punkter på kartan
       for (Location l : locationGraph.getNodes()) {
         double differenceX = x - l.getX();
         double differenceY = y - l.getY();
-        if ((differenceX < 1) && (differenceY < 1)) {
-          Circle place = new Circle(l.getX(), l.getY(), 10, Color.DARKRED);
+        //Kollar differancen mellan musklickets x och graphens x
+        //Om diffen är mindre än 5 så är de samma
+        if (Math.abs(x - l.getX()) < 5 && Math.abs(y - l.getY()) < 5) {
+          //Går igenom punkterna i markedPlaces
           for (int i = 0; i < markedPlaces.length; i++) {
-            if (markedPlaces[i].getCenterX() == l.getX() && markedPlaces[i].getCenterY() == l.getY()) {
-              markedPlaces[i] = new Circle(l.getX(), l.getY(), 7, Color.BLUE);
-              markedPlaces[i] = null;
+            //Om det finns cirklar i markedPlaces, kolla om någon av dessa är Location l
+            //tar i och lägger den i en cirkel
+            Circle circle = markedPlaces[i];
+            //kollar om cirkeln inte är null och om cirkeln är lika med en cirkel som redan finns
+              if (circle != null && circle.getCenterX() == l.getX() && circle.getCenterY() == l.getY()) {
+                pane.getChildren().remove(markedPlaces[i]);
+                markedPlaces[i] = new Circle(l.getX(), l.getY(), 7, Color.BLUE);
+                pane.getChildren().add(markedPlaces[i]);
+                markedPlaces[i] = null;
+                return;
+              }
             }
+          //kollar om listan är full
+          if (markedPlaces[0] != null && markedPlaces[1] != null) {
+            return;
+          }
+          //det finns en ledig plats där circle kan läggas till och ritas ut på kartan
+          Circle circle = new Circle(l.getX(), l.getY(), 10, Color.DARKRED);
+          pane.getChildren().add(circle);
+          for (int i = 0; i < markedPlaces.length; i++) {
             if (markedPlaces[i] == null) {
-              markedPlaces[i] = place;
-              pane.getChildren().add(markedPlaces[i]);
+              markedPlaces[i] = circle;
+              break;
             }
           }
         }

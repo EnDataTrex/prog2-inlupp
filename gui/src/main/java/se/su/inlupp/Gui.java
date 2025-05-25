@@ -495,6 +495,10 @@ public class Gui extends Application {
         TextField timeField = new TextField();
 
         VBox fields = new VBox(10, new Label("name:"), nameField, new Label("time"), timeField);
+        dialog.getDialogPane().setContent(fields);
+        ButtonType okButton = new ButtonType("OK");
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().setAll(okButton, cancelButton);
 
       }
   }

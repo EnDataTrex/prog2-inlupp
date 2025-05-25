@@ -187,16 +187,11 @@ public class Gui extends Application {
     hbox.getChildren().get(4).onMouseClickedProperty().setValue(event -> {
       //hbox.setBackground(Background.fill(Color.BLACK));
       root.setBackground(Background.fill(Color.web("f0ffea")));
-
     });
-
-    //TODO nu ligger klick på stack, pane funkar inte
-    //kan bero på att vi sätter den till null new place
 
     markPlace();
 
     stage.setOnCloseRequest(event -> {
-      //TODO försökte med att använda exitprogrammetoden men det funkar inte riktigt
       if (saveStatus) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You have unsaved changes", ButtonType.OK, ButtonType.CANCEL);
         alert.setTitle("Unsaved changes");

@@ -487,7 +487,16 @@ public class Gui extends Application {
         alert.setHeaderText("Connection Error");
         alert.setContentText("Two places are not marked");
         alert.showAndWait();
-    }
+    }else{
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("New Connection from" + markedPlaces[0] + " to " + markedPlaces[1]);
+
+        TextField nameField = new TextField();
+        TextField timeField = new TextField();
+
+        VBox fields = new VBox(10, new Label("name:"), nameField, new Label("time"), timeField);
+
+      }
   }
 
   public static void main(String[] args) {

@@ -171,7 +171,7 @@ public class Gui extends Application {
     hbox.getChildren().get(1).onMouseClickedProperty().setValue(event -> {
       hbox.getChildren().get(1).setStyle("-fx-background-color: #e2efff;");
       root.setBackground(Background.fill(Color.web("e2efff")));
-
+      showConnection();
       hbox.getChildren().get(1).setStyle("-fx-background-color: floralwhite; -fx-border-color: darkgray;");
     });
 
@@ -496,6 +496,42 @@ public class Gui extends Application {
         }
       }
     });
+  }
+
+  public void showConnection(){
+    //TODO början av koden är samma som newConnection med kontroller, kanske göra en metod för detta?
+    if (markedPlaces[0] == null || markedPlaces[1] == null) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Error");
+      alert.setHeaderText("Connection Error");
+      alert.setContentText("Two places are not marked");
+      alert.showAndWait();
+    }
+    if(markedPlaces[0] != null && markedPlaces[1] != null){
+      Location startLocation = null;
+      Location endLocation = null;
+
+      for (Location l : locationGraph.getNodes()) {
+        if (l.getX() == markedPlaces[0].getCenterX() && l.getY() == markedPlaces[0].getCenterY()) {
+          startLocation = l;
+        }
+
+        if (l.getX() == markedPlaces[1].getCenterX() && l.getY() == markedPlaces[1].getCenterY()) {
+          endLocation = l;
+        }
+      }
+
+      if(!checkExistedConnection(startLocation, endLocation)){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("No connection available");
+      }
+      else if(checkExistedConnection(startLocation, endLocation)){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+          alert.setTitle("Connection from" + startLocation.getName() + " to " + endLocation.getName());
+      }
+    }
+
+
   }
 
   public void newConnection(){

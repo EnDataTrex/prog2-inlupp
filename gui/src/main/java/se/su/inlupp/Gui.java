@@ -3,6 +3,7 @@ package se.su.inlupp;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -13,8 +14,10 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.scene.input.MouseEvent;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -155,39 +158,49 @@ public class Gui extends Application {
     }
 
     /*----------------------------------------------------------------------------------------------*/
-    //newMap
+    //Find Path
     hbox.getChildren().get(0).onMouseClickedProperty().setValue(event -> {
       //hbox.setBackground(Background.fill(Color.web("ffeded")));
+      hbox.getChildren().get(0).setStyle("-fx-background-color: #ffeded;");
       root.setBackground(Background.fill(Color.web("ffeded")));
+
+      hbox.getChildren().get(0).setStyle("-fx-background-color: floralwhite; -fx-border-color: darkgray;");
     });
 
-    //Open
+    //Show Connection
     hbox.getChildren().get(1).onMouseClickedProperty().setValue(event -> {
-      //hbox.setBackground(Background.fill(Color.web("e2efff")));
+      hbox.getChildren().get(1).setStyle("-fx-background-color: #e2efff;");
       root.setBackground(Background.fill(Color.web("e2efff")));
+
+      hbox.getChildren().get(1).setStyle("-fx-background-color: floralwhite; -fx-border-color: darkgray;");
     });
 
-    //Save
+    //New place
     hbox.getChildren().get(2).onMouseClickedProperty().setValue(event -> {
-      //hbox.setBackground(Background.fill(Color.web("fff7e2")));
+      hbox.getChildren().get(2).setStyle("-fx-background-color: #fff7e2;");
       root.setBackground(Background.fill(Color.web("fff7e2")));
       //TODO kollar om filename inte är null så att det finns en bakgrundsbild?
       if (fileName != null) {
         newPlace();
       }
+      hbox.getChildren().get(2).setStyle("-fx-background-color: floralwhite; -fx-border-color: darkgray;");
     });
 
-    //SaveImage
+    //New Connection
     hbox.getChildren().get(3).onMouseClickedProperty().setValue(event -> {
-      //hbox.setBackground(Background.fill(Color.PURPLE));
+      hbox.getChildren().get(3).setStyle("-fx-background-color: #f4f0ff;");
       root.setBackground(Background.fill(Color.web("f4f0ff")));
       newConnection();
+
+      hbox.getChildren().get(3).setStyle("-fx-background-color: floralwhite; -fx-border-color: darkgray;");
     });
 
-    //Exit
+    //Change Connection
     hbox.getChildren().get(4).onMouseClickedProperty().setValue(event -> {
-      //hbox.setBackground(Background.fill(Color.BLACK));
+      hbox.getChildren().get(4).setStyle("-fx-background-color: #f0ffea;");
       root.setBackground(Background.fill(Color.web("f0ffea")));
+
+      hbox.getChildren().get(4).setStyle("-fx-background-color: floralwhite; -fx-border-color: darkgray;");
     });
 
     markPlace();
@@ -399,6 +412,11 @@ public class Gui extends Application {
   }
 
   private void newPlace(){
+    //Detta löste klickproblemet med new place, den klagar lite grann men vet inget annat sätt
+    //Istället för att sätta den till null där nere (pane.setOnMouseClicked(null);)
+    //Så sätt den till paneMouseHandler så man "återställer" den till så den var förut
+    EventHandler<MouseEvent> paneMouseHandler = (EventHandler<MouseEvent>) pane.getOnMouseClicked();
+
     root.setCursor(Cursor.CROSSHAIR);
 
     for (String e : elements) {
@@ -425,7 +443,7 @@ public class Gui extends Application {
         Location location = new Location(name, x, y);
         locationGraph.add(location);
       }
-      pane.setOnMouseClicked(null);
+      pane.setOnMouseClicked(paneMouseHandler);
       root.setCursor(Cursor.DEFAULT);
 
       for (String e : elements) {
@@ -481,26 +499,87 @@ public class Gui extends Application {
   }
 
   public void newConnection(){
-      if (markedPlaces[0] == null || markedPlaces[1] == null) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText("Connection Error");
-        alert.setContentText("Two places are not marked");
-        alert.showAndWait();
-    }else{
+    if (markedPlaces[0] == null || markedPlaces[1] == null) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Error");
+      alert.setHeaderText("Connection Error");
+      alert.setContentText("Two places are not marked");
+      alert.showAndWait();
+    }
+
+    boolean existedConnection = false;
+    if (markedPlaces[0] != null && markedPlaces[1] != null) {
+      Location firstLocation = null;
+      Location secondLocation = null;
+      //gå igenom listan över locations
+      for (Location l : locationGraph.getNodes()) {
+        //kolla om noden är lika
+        if (l.getX() == markedPlaces[0].getCenterX() && l.getY() == markedPlaces[0].getCenterY()) {
+          //hämtar ut location
+          firstLocation = l;
+        }
+        //kan orsaka problem med == och doubles
+        if (l.getX() == markedPlaces[1].getCenterX() && l.getY() == markedPlaces[1].getCenterY()) {
+          secondLocation = l;
+        }
+      }
+      existedConnection = checkExistedConnection(firstLocation, secondLocation);
+
+      if (firstLocation != null && secondLocation != null && !existedConnection) {
         Dialog<Void> dialog = new Dialog<>();
-        dialog.setTitle("New Connection from" + markedPlaces[0] + " to " + markedPlaces[1]);
+        dialog.setTitle("New Connection");
+        dialog.setHeaderText("New Connection from " + firstLocation.getName() + " to " + secondLocation.getName());
 
         TextField nameField = new TextField();
         TextField timeField = new TextField();
 
-        VBox fields = new VBox(10, new Label("name:"), nameField, new Label("time"), timeField);
+        VBox fields = new VBox(10, new Label("Name:"), nameField, new Label("Time"), timeField);
         dialog.getDialogPane().setContent(fields);
         ButtonType okButton = new ButtonType("OK");
         ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().setAll(okButton, cancelButton);
 
+        dialog.showAndWait();
+
+        //TODO behöver kolla om timefield består av siffror
+        if (!nameField.getText().isEmpty() && !timeField.getText().isEmpty()) {
+          //TODO dessa ger felmeddelande om att "element is missing"
+          //String name = nameField.getText();
+          //int time = Integer.parseInt(timeField.getText());
+          //graph.connect(firstLocation.getName(), secondLocation.getName(), name, time);
+
+          Line line = new Line(firstLocation.getX(), firstLocation.getY(), secondLocation.getX(), secondLocation.getY());
+          line.setStrokeWidth(2);
+          line.setStroke(Color.BLACK);
+          pane.getChildren().add(line);
+
+        } else{
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Error");
+          alert.setHeaderText("Connection Error");
+          alert.setContentText("Name and time must be filled in correctly");
+          //TODO operationen ska avbrytas
+          alert.showAndWait();
+        }
       }
+    }
+  }
+
+  private boolean checkExistedConnection(Location firstLocation, Location secondLocation) {
+    //går igenom edges från firstLocation
+    for (Edge<Location> edge : locationGraph.getEdgesFrom(firstLocation)) {
+      //om destinationen är lika med secondLocation så finns redan en connection
+      //och ett felmeddelande ges
+      if (edge.getDestination() == secondLocation) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText("Connection Error");
+        alert.setContentText("Connection already exists");
+        alert.showAndWait();
+        return true;
+      }
+    }
+    return false;
   }
 
   public static void main(String[] args) {

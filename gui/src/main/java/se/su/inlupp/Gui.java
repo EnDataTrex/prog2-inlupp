@@ -417,24 +417,20 @@ public class Gui extends Application {
       Optional<String> result = newPlaceDialog.showAndWait();
       String name = newPlaceDialog.getEditor().getText();
 
-      if(result.isPresent() && !name.isEmpty()){
+      if(result.isPresent() && !name.isEmpty()) {
         double x = mouseEvent.getX();
         double y = mouseEvent.getY();
 
-        Circle place = new Circle(x, y,7, Color.BLUE);
+        Circle place = new Circle(x, y, 7, Color.BLUE);
         pane.getChildren().add(place);
 
         //Lägger till punkten i listan
         Location location = new Location(name, x, y);
         locationGraph.add(location);
+      }
+      pane.setOnMouseClicked(null);
+      root.setCursor(Cursor.DEFAULT);
 
-        pane.setOnMouseClicked(null);
-        root.setCursor(Cursor.DEFAULT);
-      }
-      if(result.isEmpty()){
-        pane.setOnMouseClicked(null);
-        root.setCursor(Cursor.DEFAULT);
-      }
       for (String e : elements) {
         hbox.getChildren().get(elements.indexOf(e)).setDisable(false);
       }

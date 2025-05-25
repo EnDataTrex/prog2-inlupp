@@ -136,7 +136,7 @@ public class Gui extends Application {
     grid.add(hbox, 0,1); //lägger till hbox i roten
     grid.setPadding(new Insets(10)); //sätter padding aka utrymme mellan rotens innehåll och kanter
 
-    hbox.setBackground(Background.fill(Color.LIGHTBLUE)); //sätter "övriga knappars" bakgrund till blå
+    //hbox.setBackground(Background.fill(Color.LIGHTBLUE)); //sätter "övriga knappars" bakgrund till blå
     hbox.setAlignment(Pos.CENTER); //centrerar de "övriga knapparna"
     hbox.setSpacing(3); //Sätter ett utrymme runt knapparna
 
@@ -156,19 +156,20 @@ public class Gui extends Application {
     /*----------------------------------------------------------------------------------------------*/
     //newMap
     hbox.getChildren().get(0).onMouseClickedProperty().setValue(event -> {
-      hbox.setBackground(Background.fill(Color.LIGHTBLUE));
-      root.setBackground(Background.fill(Color.LIGHTBLUE));
+      //hbox.setBackground(Background.fill(Color.web("ffeded")));
+      root.setBackground(Background.fill(Color.web("ffeded")));
     });
 
     //Open
     hbox.getChildren().get(1).onMouseClickedProperty().setValue(event -> {
-      hbox.setBackground(Background.fill(Color.LIGHTBLUE));
-      root.setBackground(Background.fill(Color.LIGHTBLUE));
+      //hbox.setBackground(Background.fill(Color.web("e2efff")));
+      root.setBackground(Background.fill(Color.web("e2efff")));
     });
 
     //Save
     hbox.getChildren().get(2).onMouseClickedProperty().setValue(event -> {
-      root.setBackground(Background.fill(Color.YELLOW));
+      //hbox.setBackground(Background.fill(Color.web("fff7e2")));
+      root.setBackground(Background.fill(Color.web("fff7e2")));
       //TODO kollar om filename inte är null så att det finns en bakgrundsbild?
       if (fileName != null) {
         newPlace();
@@ -177,15 +178,15 @@ public class Gui extends Application {
 
     //SaveImage
     hbox.getChildren().get(3).onMouseClickedProperty().setValue(event -> {
-      hbox.setBackground(Background.fill(Color.PURPLE));
-      root.setBackground(Background.fill(Color.PURPLE));
+      //hbox.setBackground(Background.fill(Color.PURPLE));
+      root.setBackground(Background.fill(Color.web("f4f0ff")));
       newConnection();
     });
 
     //Exit
     hbox.getChildren().get(4).onMouseClickedProperty().setValue(event -> {
-      hbox.setBackground(Background.fill(Color.BLACK));
-      root.setBackground(Background.fill(Color.BLACK));
+      //hbox.setBackground(Background.fill(Color.BLACK));
+      root.setBackground(Background.fill(Color.web("f0ffea")));
 
     });
 

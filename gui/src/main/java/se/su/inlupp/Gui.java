@@ -38,7 +38,7 @@ public class Gui extends Application {
   VBox vboxLeft;
   VBox vboxRight;
   ArrayList<String> elements;
-  Circle[] markedPlaces;
+  Circle[] markedPlaces = new Circle[2];
   //Gör det tydligt om programmet är sparat eller inte
 
   public void start(Stage stage) {
@@ -431,10 +431,13 @@ public class Gui extends Application {
         pane.setOnMouseClicked(null);
         root.setCursor(Cursor.DEFAULT);
       }
+      if(result.isEmpty()){
+        pane.setOnMouseClicked(null);
+        root.setCursor(Cursor.DEFAULT);
+      }
       for (String e : elements) {
         hbox.getChildren().get(elements.indexOf(e)).setDisable(false);
       }
-      //TODO den slutar inte sedan placera ut new place även om man trycker på andra knappar
     });
   }
 
@@ -444,14 +447,11 @@ public class Gui extends Application {
   }
 
   public void markPlace() {
-    markedPlaces = new Circle[2];
     pane.setOnMouseClicked(mouseEvent -> {
       double x = mouseEvent.getX();
       double y = mouseEvent.getY();
       //kollar igenom locationGraph med alla punkter på kartan
       for (Location l : locationGraph.getNodes()) {
-        double differenceX = x - l.getX();
-        double differenceY = y - l.getY();
         //Kollar differancen mellan musklickets x och graphens x
         //Om diffen är mindre än 5 så är de samma
         if (Math.abs(x - l.getX()) < 5 && Math.abs(y - l.getY()) < 5) {

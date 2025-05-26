@@ -199,7 +199,7 @@ public class Gui extends Application {
     hbox.getChildren().get(4).onMouseClickedProperty().setValue(event -> {
       hbox.getChildren().get(4).setStyle("-fx-background-color: #f0ffea;");
       root.setBackground(Background.fill(Color.web("f0ffea")));
-
+      changeConnection();
       hbox.getChildren().get(4).setStyle("-fx-background-color: floralwhite; -fx-border-color: darkgray;");
     });
 
@@ -542,11 +542,10 @@ public class Gui extends Application {
         alert.setTitle("Connection found");
         alert.setHeaderText("Connection from " + firstLocation.getName() + " to " + secondLocation.getName());
 
-        //TODO hämta weightg och namn på färdsätt
-        //Edge<Location> edge = locationGraph.getEdgeBetween(firstLocation, secondLocation);
-        //String timeAsString = String.valueOf(edge.getWeight());
-        TextField name = new TextField("hej");
-        TextField time = new TextField("hejsan");
+        Edge<String> edge = graph.getEdgeBetween(firstLocation.getName(), secondLocation.getName());
+        String timeAsString = String.valueOf(edge.getWeight());
+        TextField name = new TextField(edge.getName());
+        TextField time = new TextField(timeAsString);
         name.setEditable(false);
         time.setEditable(false);
         name.setFocusTraversable(false);
@@ -625,8 +624,7 @@ public class Gui extends Application {
 
         Optional<ButtonType> result = dialog.showAndWait();
 
-        //TODO behöver kolla om timefield består av siffror
-        if (result.isPresent() && result.get() == okButton && !nameField.getText().isEmpty() && !timeField.getText().isEmpty()) {
+        if (result.isPresent() && result.get() == okButton && !nameField.getText().isEmpty() && !timeField.getText().isEmpty() && isInteger(timeField.getText())) {
           String name = nameField.getText();
           int time = Integer.parseInt(timeField.getText());
           graph.connect(firstLocation.getName(), secondLocation.getName(), name, time);
@@ -669,6 +667,56 @@ public class Gui extends Application {
     }
     return false;
   }
+
+  private void changeConnection(){
+    checkMarkedPlaces();
+    Location[] location = getLocationFromMarkedPlaces();
+    if (location != null && location.length >= 2) {
+      Location firstLocation = location[0];
+      Location secondLocation = location[1];
+
+      boolean existedConnection = checkExistedConnection(firstLocation, secondLocation);
+
+      if (firstLocation != null && secondLocation != null && !existedConnection) {
+        Dialog alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Change connection");
+        alert.setHeaderText("Change connection from " + firstLocation.getName() + " to " + secondLocation.getName());
+
+        Edge<String> edge = graph.getEdgeBetween(firstLocation.getName(), secondLocation.getName());
+        TextField nameField = new TextField(edge.getName());
+        nameField.setEditable(false);
+        nameField.setFocusTraversable(false);
+        TextField timeField = new TextField();
+
+        VBox fields = new VBox(10, new Label("Name:"), nameField, new Label("Time"), timeField);
+        alert.getDialogPane().setContent(fields);
+
+        ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        Optional<ButtonType> result = alert.showAndWait();
+
+        int time = Integer.parseInt(timeField.getText());
+        String name = edge.getName();
+
+        //Jag vet inte om det här är så smidigt haha. Måste också göra fler checkar.
+        graph.disconnect(firstLocation.getName(),secondLocation.getName());
+
+        graph.connect(firstLocation.getName(), secondLocation.getName(), name, time);
+
+      }
+    }
+  }
+  //Till för att kolla om time är en int eller inte
+  private boolean isInteger(String integerToCheck) {
+    try{
+      Integer.parseInt(integerToCheck);
+      return true;
+    }catch(Exception e){
+      return false;
+    }
+  }
+
+
 
   public static void main(String[] args) {
     launch(args);

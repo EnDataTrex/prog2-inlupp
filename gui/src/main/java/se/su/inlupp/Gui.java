@@ -253,10 +253,13 @@ public class Gui extends Application {
           double y = Double.parseDouble(objects[i+2]);
           Location location = new Location(name, x, y);
           locationGraph.add(location);
-
+          if(!graph.getNodes().contains(name)){
+            graph.add(name);
+          }
           //skulle kunna göra en metod för att måla ut punkter då vi ockdå gör den i new place
           Circle circle = new Circle(location.getX(), location.getY(), 7, Color.BLUE);
           pane.getChildren().add(circle);
+
         }
 
         while((line = bufferedReader.readLine()) != null) {
@@ -266,8 +269,25 @@ public class Gui extends Application {
           String edge = objects[2];
           int weight = Integer.parseInt(objects[3]);
           if(graph.getEdgeBetween(from, to) == null) {
+
             graph.connect(from, to, edge, weight);
 
+            Location fromLocation = null;
+            Location toLocation = null;
+            for(Location l : locationGraph.getNodes()) {
+              if(l.getName().equals(from)) {
+                fromLocation = l;
+              }
+              if(l.getName().equals(to)) {
+                toLocation = l;
+              }
+            }
+            if (fromLocation != null && toLocation != null) {
+              Line connectionLine = new Line(fromLocation.getX(), fromLocation.getY(), toLocation.getX(), toLocation.getY());
+              connectionLine.setStrokeWidth(2);
+              connectionLine.setStroke(Color.BLACK);
+              pane.getChildren().add(connectionLine);
+            }
             //TODO när vi gjort connection, lägg till linjer mellan cirklar
           }
         }
@@ -298,7 +318,6 @@ public class Gui extends Application {
       PrintWriter printWriter = new PrintWriter(fileWriter);
 
       printWriter.println(fileName);
-
       for(Location l : locationGraph.getNodes()) {
         if(!locationGraph.getNodes().isEmpty()){
           String locationWithFormat = "";
@@ -308,13 +327,16 @@ public class Gui extends Application {
         }
       }
       printWriter.println();
+      //går igenom alla noder i graph
       for(String node : graph.getNodes()) {
-        String nodeWithFormat = "";
-        nodeWithFormat = nodeWithFormat + node + ";";
+        //String nodeWithFormat = "";
+        //nodeWithFormat = nodeWithFormat + node + ";";
+        //kollar så att listan inte är tom
         if(!graph.getNodes().isEmpty()){
+          //går igenom alla edges för noden
           for(Edge<String> edge : graph.getEdgesFrom(node)) {
-            nodeWithFormat = nodeWithFormat + edge.getDestination() + ";" + edge.getName() + ";" + edge.getWeight();
-            printWriter.println(nodeWithFormat);
+            String nodeWithFormat = node + ";" + edge.getDestination() + ";" + edge.getName() + ";" + edge.getWeight() + "\n";
+            printWriter.print(nodeWithFormat);
           }
         }
       }
@@ -442,6 +464,10 @@ public class Gui extends Application {
         //Lägger till punkten i listan
         Location location = new Location(name, x, y);
         locationGraph.add(location);
+
+        if(!graph.getNodes().contains(name)){
+          graph.add(name);
+        }
       }
       pane.setOnMouseClicked(paneMouseHandler);
       root.setCursor(Cursor.DEFAULT);
@@ -457,7 +483,7 @@ public class Gui extends Application {
     locationGraph = new ListGraph<>();
   }
 
-  public void markPlace() {
+  private void markPlace() {
     pane.setOnMouseClicked(mouseEvent -> {
       double x = mouseEvent.getX();
       double y = mouseEvent.getY();
@@ -498,43 +524,27 @@ public class Gui extends Application {
     });
   }
 
-  public void showConnection(){
-    //TODO början av koden är samma som newConnection med kontroller, kanske göra en metod för detta?
-    if (markedPlaces[0] == null || markedPlaces[1] == null) {
-      Alert alert = new Alert(Alert.AlertType.ERROR);
-      alert.setTitle("Error");
-      alert.setHeaderText("Connection Error");
-      alert.setContentText("Two places are not marked");
-      alert.showAndWait();
-    }
-    if(markedPlaces[0] != null && markedPlaces[1] != null){
-      Location startLocation = null;
-      Location endLocation = null;
+  private void showConnection(){
+    checkMarkedPlaces();
 
-      for (Location l : locationGraph.getNodes()) {
-        if (l.getX() == markedPlaces[0].getCenterX() && l.getY() == markedPlaces[0].getCenterY()) {
-          startLocation = l;
-        }
+    if (getLocationFromMarkedPlaces() != null) {
+      Location[] location = getLocationFromMarkedPlaces();
 
-        if (l.getX() == markedPlaces[1].getCenterX() && l.getY() == markedPlaces[1].getCenterY()) {
-          endLocation = l;
-        }
-      }
+      Location firstLocation = location[0];
+      Location secondLocation = location[1];
 
-      if(!checkExistedConnection(startLocation, endLocation)){
+      if(!checkExistedConnection(firstLocation, secondLocation)){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("No connection available");
       }
-      else if(checkExistedConnection(startLocation, endLocation)){
+      else if(checkExistedConnection(firstLocation, secondLocation)){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-          alert.setTitle("Connection from" + startLocation.getName() + " to " + endLocation.getName());
+          alert.setTitle("Connection from" + firstLocation.getName() + " to " + secondLocation.getName());
       }
     }
-
-
   }
 
-  public void newConnection(){
+  private void checkMarkedPlaces(){
     if (markedPlaces[0] == null || markedPlaces[1] == null) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Error");
@@ -542,8 +552,10 @@ public class Gui extends Application {
       alert.setContentText("Two places are not marked");
       alert.showAndWait();
     }
+  }
 
-    boolean existedConnection = false;
+  private Location[] getLocationFromMarkedPlaces() {
+    Location[] locations = new Location[2];
     if (markedPlaces[0] != null && markedPlaces[1] != null) {
       Location firstLocation = null;
       Location secondLocation = null;
@@ -559,10 +571,28 @@ public class Gui extends Application {
           secondLocation = l;
         }
       }
-      existedConnection = checkExistedConnection(firstLocation, secondLocation);
+      locations[0] = firstLocation;
+      locations[1] = secondLocation;
+      return locations;
+    }
+    return null;
+  }
+
+  private void newConnection(){
+    checkMarkedPlaces();
+
+    if (getLocationFromMarkedPlaces() != null) {
+      Location[] location = getLocationFromMarkedPlaces();
+
+      Location firstLocation = location[0];
+      Location secondLocation = location[1];
+
+      //TODO blir fel, man akn lägga ut flera connections på två punkter, existedConnections ger fel resultat
+      boolean existedConnection = checkExistedConnection(firstLocation, secondLocation);
+      System.out.println(existedConnection);
 
       if (firstLocation != null && secondLocation != null && !existedConnection) {
-        Dialog<Void> dialog = new Dialog<>();
+        Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("New Connection");
         dialog.setHeaderText("New Connection from " + firstLocation.getName() + " to " + secondLocation.getName());
 
@@ -571,25 +601,26 @@ public class Gui extends Application {
 
         VBox fields = new VBox(10, new Label("Name:"), nameField, new Label("Time"), timeField);
         dialog.getDialogPane().setContent(fields);
-        ButtonType okButton = new ButtonType("OK");
+
+        ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
         dialog.getDialogPane().getButtonTypes().setAll(okButton, cancelButton);
 
-        dialog.showAndWait();
+        Optional<ButtonType> result = dialog.showAndWait();
 
         //TODO behöver kolla om timefield består av siffror
-        if (!nameField.getText().isEmpty() && !timeField.getText().isEmpty()) {
-          //TODO dessa ger felmeddelande om att "element is missing"
-          //String name = nameField.getText();
-          //int time = Integer.parseInt(timeField.getText());
-          //graph.connect(firstLocation.getName(), secondLocation.getName(), name, time);
+        if (result.isPresent() && result.get() == okButton && !nameField.getText().isEmpty() && !timeField.getText().isEmpty()) {
+          String name = nameField.getText();
+          int time = Integer.parseInt(timeField.getText());
+          graph.connect(firstLocation.getName(), secondLocation.getName(), name, time);
 
           Line line = new Line(firstLocation.getX(), firstLocation.getY(), secondLocation.getX(), secondLocation.getY());
           line.setStrokeWidth(2);
           line.setStroke(Color.BLACK);
           pane.getChildren().add(line);
 
-        } else{
+        } else {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Error");
           alert.setHeaderText("Connection Error");
@@ -606,7 +637,7 @@ public class Gui extends Application {
     for (Edge<Location> edge : locationGraph.getEdgesFrom(firstLocation)) {
       //om destinationen är lika med secondLocation så finns redan en connection
       //och ett felmeddelande ges
-      if (edge.getDestination() == secondLocation) {
+      if (edge.getDestination() == secondLocation || edge.getDestination() == firstLocation) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setHeaderText("Connection Error");

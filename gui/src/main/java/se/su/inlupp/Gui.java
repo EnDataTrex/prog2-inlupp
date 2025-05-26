@@ -526,9 +526,8 @@ public class Gui extends Application {
 
   private void showConnection(){
     checkMarkedPlaces();
-
-    if (getLocationFromMarkedPlaces() != null) {
-      Location[] location = getLocationFromMarkedPlaces();
+    Location[] location = getLocationFromMarkedPlaces();
+    if (location != null && location.length >= 2) {
 
       Location firstLocation = location[0];
       Location secondLocation = location[1];
@@ -538,15 +537,20 @@ public class Gui extends Application {
         alert.setTitle("No connection available");
         alert.showAndWait();
       }
-      else if(!checkExistedConnection(firstLocation, secondLocation)){
+      else{
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Connection found");
         alert.setHeaderText("Connection from " + firstLocation.getName() + " to " + secondLocation.getName());
 
-        //TODO hämta weight och namn på färdsätt
-
-        TextField name = new TextField();
-        TextField time = new TextField();
+        //TODO hämta weightg och namn på färdsätt
+        //Edge<Location> edge = locationGraph.getEdgeBetween(firstLocation, secondLocation);
+        //String timeAsString = String.valueOf(edge.getWeight());
+        TextField name = new TextField("hej");
+        TextField time = new TextField("hejsan");
+        name.setEditable(false);
+        time.setEditable(false);
+        name.setFocusTraversable(false);
+        time.setFocusTraversable(false);
 
         VBox fields = new VBox(10, new Label("Name:"), name, new Label("Time"), time);
         alert.getDialogPane().setContent(fields);

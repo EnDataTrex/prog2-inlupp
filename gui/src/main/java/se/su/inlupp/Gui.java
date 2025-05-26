@@ -533,13 +533,25 @@ public class Gui extends Application {
       Location firstLocation = location[0];
       Location secondLocation = location[1];
 
-      if(!checkExistedConnection(firstLocation, secondLocation)){
+      if(checkExistedConnection(firstLocation, secondLocation)){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("No connection available");
+        alert.showAndWait();
       }
-      else if(checkExistedConnection(firstLocation, secondLocation)){
+      else if(!checkExistedConnection(firstLocation, secondLocation)){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-          alert.setTitle("Connection from" + firstLocation.getName() + " to " + secondLocation.getName());
+        alert.setTitle("Connection found");
+        alert.setHeaderText("Connection from " + firstLocation.getName() + " to " + secondLocation.getName());
+
+        //TODO hämta weight och namn på färdsätt
+
+        TextField name = new TextField();
+        TextField time = new TextField();
+
+        VBox fields = new VBox(10, new Label("Name:"), name, new Label("Time"), time);
+        alert.getDialogPane().setContent(fields);
+
+        alert.showAndWait();
       }
     }
   }
@@ -634,17 +646,22 @@ public class Gui extends Application {
 
   private boolean checkExistedConnection(Location firstLocation, Location secondLocation) {
     //går igenom edges från firstLocation
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setTitle("Error");
+    alert.setHeaderText("Connection Error");
+    alert.setContentText("Connection already exists");
     for (Edge<Location> edge : locationGraph.getEdgesFrom(firstLocation)) {
       //om destinationen är lika med secondLocation så finns redan en connection
       //och ett felmeddelande ges
-      if (edge.getDestination() == secondLocation || edge.getDestination() == firstLocation) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText("Connection Error");
-        alert.setContentText("Connection already exists");
+      if (edge.getDestination() == secondLocation) {
         alert.showAndWait();
         return true;
       }
+    }
+    for (Edge<Location> edge : locationGraph.getEdgesFrom(secondLocation)) {
+      if (edge.getDestination() == firstLocation)
+        alert.showAndWait();
+      return true;
     }
     return false;
   }

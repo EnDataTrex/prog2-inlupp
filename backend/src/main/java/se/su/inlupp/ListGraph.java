@@ -158,7 +158,7 @@ public class ListGraph<T> implements Graph<T> {
     } finally {
       if(path.isEmpty()){
         return null;
-        }
+      }
     }
     return path;
   }

@@ -532,11 +532,8 @@ public class Gui extends Application {
       Location firstLocation = location[0];
       Location secondLocation = location[1];
 
-      //TODO om det inte finns någon connection funkar inte
-      if(checkExistedConnection(firstLocation, secondLocation)){
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("No connection available");
-        alert.showAndWait();
+      if(!checkExistedConnection(firstLocation, secondLocation)){
+        errorMessageNoConnection();
       }
       else{
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -603,11 +600,15 @@ public class Gui extends Application {
       Location firstLocation = location[0];
       Location secondLocation = location[1];
 
-      //TODO blir fel, man kan lägga ut flera connections på två punkter, existedConnections ger fel resultat
       boolean existedConnection = checkExistedConnection(firstLocation, secondLocation);
-      System.out.println(existedConnection);
 
-      if (firstLocation != null && secondLocation != null && !existedConnection) {
+      if (existedConnection) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText("Connection Error");
+        alert.setContentText("Connection already exists");
+        alert.showAndWait();
+      } else {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("New Connection");
         dialog.setHeaderText("New Connection from " + firstLocation.getName() + " to " + secondLocation.getName());
@@ -647,38 +648,28 @@ public class Gui extends Application {
   }
 
   private boolean checkExistedConnection(Location firstLocation, Location secondLocation) {
-    //går igenom edges från firstLocation
+    return graph.getEdgeBetween(firstLocation.getName(), secondLocation.getName()) != null;
+  }
+
+  private void errorMessageNoConnection(){
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setTitle("Error");
     alert.setHeaderText("Connection Error");
-    alert.setContentText("Connection already exists");
-    for (Edge<Location> edge : locationGraph.getEdgesFrom(firstLocation)) {
-      //om destinationen är lika med secondLocation så finns redan en connection
-      //och ett felmeddelande ges
-      if (edge.getDestination() == secondLocation) {
-        alert.showAndWait();
-        return true;
-      }
-    }
-    for (Edge<Location> edge : locationGraph.getEdgesFrom(secondLocation)) {
-      if (edge.getDestination() == firstLocation)
-        alert.showAndWait();
-      return true;
-    }
-    return false;
+    alert.setContentText("No connection available");
+    alert.showAndWait();
   }
 
   private void changeConnection(){
     checkMarkedPlaces();
     Location[] location = getLocationFromMarkedPlaces();
-    if (location != null && location.length >= 2) {
+    if (location != null) {
       Location firstLocation = location[0];
       Location secondLocation = location[1];
 
       boolean existedConnection = checkExistedConnection(firstLocation, secondLocation);
 
-      if (firstLocation != null && secondLocation != null && !existedConnection) {
-        Dialog alert = new Alert(Alert.AlertType.INFORMATION);
+      if (existedConnection) {
+        Dialog<ButtonType> alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Change connection");
         alert.setHeaderText("Change connection from " + firstLocation.getName() + " to " + secondLocation.getName());
 
@@ -703,6 +694,9 @@ public class Gui extends Application {
 
         graph.connect(firstLocation.getName(), secondLocation.getName(), name, time);
       }
+      else{
+        errorMessageNoConnection();
+      }
     }
   }
   //Till för att kolla om time är en int eller inte
@@ -717,8 +711,9 @@ public class Gui extends Application {
 
   private void findPath(){
     checkMarkedPlaces();
-    Location[] location = getLocationFromMarkedPlaces();
-      if(graph.pathExists(location[0].getName(), location[1].getName())){
+    if (getLocationFromMarkedPlaces() != null) {
+      Location[] location = getLocationFromMarkedPlaces();
+      if (graph.pathExists(location[0].getName(), location[1].getName())) {
         List<Edge<String>> listOfPath = graph.getPath(location[0].getName(), location[1].getName());
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Path");
@@ -727,7 +722,7 @@ public class Gui extends Application {
         dialog.getDialogPane().getButtonTypes().setAll(okButton);
         TextArea textArea = new TextArea();
         int counter = 0;
-        for(Edge<String> edge : listOfPath){
+        for (Edge<String> edge : listOfPath) {
           textArea.appendText(edge.toString() + "\n");
           counter += edge.getWeight();
         }
@@ -737,6 +732,7 @@ public class Gui extends Application {
         textArea.setFocusTraversable(false);
         dialog.getDialogPane().setContent(textArea);
         dialog.showAndWait();
+      }
     }
   }
 

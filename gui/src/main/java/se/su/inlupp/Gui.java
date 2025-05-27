@@ -24,6 +24,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 public class Gui extends Application {
@@ -163,7 +164,7 @@ public class Gui extends Application {
       //hbox.setBackground(Background.fill(Color.web("ffeded")));
       hbox.getChildren().get(0).setStyle("-fx-background-color: #ffeded;");
       root.setBackground(Background.fill(Color.web("ffeded")));
-
+      findPath();
       hbox.getChildren().get(0).setStyle("-fx-background-color: floralwhite; -fx-border-color: darkgray;");
     });
 
@@ -711,6 +712,28 @@ public class Gui extends Application {
       return true;
     }catch(Exception e){
       return false;
+    }
+  }
+
+  private void findPath(){
+    checkMarkedPlaces();
+    Location[] location = getLocationFromMarkedPlaces();
+      if(graph.pathExists(location[0].getName(), location[1].getName())){
+        List<Edge<String>> listOfPath = graph.getPath(location[0].getName(), location[1].getName());
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Path");
+        dialog.setHeaderText("The path from " + location[0].getName() + " to " + location[1].getName());
+        ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        TextArea textArea = new TextArea();
+        int counter = 0;
+        for(Edge<String> edge : listOfPath){
+          textArea.appendText(edge.toString() + "\n");
+          counter += edge.getWeight();
+        }
+        textArea.setEditable(false);
+        textArea.setFocusTraversable(false);
+        dialog.getDialogPane().setContent(textArea);
+        dialog.showAndWait();
     }
   }
 

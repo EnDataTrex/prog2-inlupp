@@ -724,12 +724,15 @@ public class Gui extends Application {
         dialog.setTitle("Path");
         dialog.setHeaderText("The path from " + location[0].getName() + " to " + location[1].getName());
         ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().setAll(okButton);
         TextArea textArea = new TextArea();
         int counter = 0;
         for(Edge<String> edge : listOfPath){
           textArea.appendText(edge.toString() + "\n");
           counter += edge.getWeight();
         }
+
+        textArea.appendText("Totalt avstånd" + counter + "\n");
         textArea.setEditable(false);
         textArea.setFocusTraversable(false);
         dialog.getDialogPane().setContent(textArea);

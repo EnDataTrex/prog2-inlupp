@@ -713,7 +713,7 @@ public class Gui extends Application {
     checkMarkedPlaces();
     if (getLocationFromMarkedPlaces() != null) {
       Location[] location = getLocationFromMarkedPlaces();
-      if (graph.pathExists(location[0].getName(), location[1].getName())) {
+      if (graph.getPath(location[0].getName(), location[1].getName()) != null && !graph.getNodes().isEmpty()) {
         List<Edge<String>> listOfPath = graph.getPath(location[0].getName(), location[1].getName());
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Path");

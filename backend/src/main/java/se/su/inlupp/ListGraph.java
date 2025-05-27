@@ -145,6 +145,24 @@ public class ListGraph<T> implements Graph<T> {
   @Override
   public List<Edge<T>> getPath(T from, T to) {
     List<Edge<T>> path = new ArrayList<>();
+    if (pathExists(from, to)) {
+      Map<T, T> connectedNodes = new HashMap<>();
+      recursiveConnect(from, null, connectedNodes);
+      T current = to;
+      while (current != null && !current.equals(from)) {
+        T next = connectedNodes.get(current);
+        Edge<T> edge = getEdgeBetween(next, current);
+        path.add(edge);
+        current = next;
+      }
+      return path;
+    }
+    return null;
+  }
+/*
+  @Override
+  public List<Edge<T>> getPath(T from, T to) {
+    List<Edge<T>> path = new ArrayList<>();
     try {
       Map<T, T> connectedNodes = new HashMap<>();
       recursiveConnect(from, null, connectedNodes);
@@ -162,6 +180,8 @@ public class ListGraph<T> implements Graph<T> {
     }
     return path;
   }
+
+ */
 
   private void recursiveConnect(T to, T from, Map<T, T> connectedNodes) {
     connectedNodes.put(to, from);

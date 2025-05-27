@@ -288,7 +288,6 @@ public class Gui extends Application {
               connectionLine.setStroke(Color.BLACK);
               pane.getChildren().add(connectionLine);
             }
-            //TODO när vi gjort connection, lägg till linjer mellan cirklar
           }
         }
       } else{
@@ -603,7 +602,7 @@ public class Gui extends Application {
       Location firstLocation = location[0];
       Location secondLocation = location[1];
 
-      //TODO blir fel, man akn lägga ut flera connections på två punkter, existedConnections ger fel resultat
+      //TODO blir fel, man kan lägga ut flera connections på två punkter, existedConnections ger fel resultat
       boolean existedConnection = checkExistedConnection(firstLocation, secondLocation);
       System.out.println(existedConnection);
 
@@ -702,7 +701,6 @@ public class Gui extends Application {
         graph.disconnect(firstLocation.getName(),secondLocation.getName());
 
         graph.connect(firstLocation.getName(), secondLocation.getName(), name, time);
-
       }
     }
   }
@@ -715,8 +713,6 @@ public class Gui extends Application {
       return false;
     }
   }
-
-
 
   public static void main(String[] args) {
     launch(args);

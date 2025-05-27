@@ -514,6 +514,11 @@ public class Gui extends Application {
           Circle circle = new Circle(l.getX(), l.getY(), 10, Color.DARKRED);
           pane.getChildren().add(circle);
           for (int i = 0; i < markedPlaces.length; i++) {
+            if (markedPlaces[0] == null && markedPlaces[1] != null) {
+              markedPlaces[0] = markedPlaces[1];
+              markedPlaces[1] = circle;
+              break;
+            }
             if (markedPlaces[i] == null) {
               markedPlaces[i] = circle;
               break;

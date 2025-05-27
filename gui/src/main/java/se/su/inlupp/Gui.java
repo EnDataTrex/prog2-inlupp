@@ -722,7 +722,7 @@ public class Gui extends Application {
         List<Edge<String>> listOfPath = graph.getPath(location[0].getName(), location[1].getName());
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Path");
-        dialog.setHeaderText("The path from " + location[0].getName() + " to " + location[1].getName());
+        dialog.setHeaderText("The Path from " + location[0].getName() + " to " + location[1].getName());
         ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().setAll(okButton);
         TextArea textArea = new TextArea();
@@ -731,8 +731,8 @@ public class Gui extends Application {
           textArea.appendText(edge.toString() + "\n");
           counter += edge.getWeight();
         }
+        textArea.appendText("Total " + counter + "\n");
 
-        textArea.appendText("Totalt avstånd" + counter + "\n");
         textArea.setEditable(false);
         textArea.setFocusTraversable(false);
         dialog.getDialogPane().setContent(textArea);

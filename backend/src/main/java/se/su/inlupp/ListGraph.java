@@ -198,10 +198,13 @@ public class ListGraph<T> implements Graph<T> {
       Collection<Edge<T>> edgesFrom = getEdgesFrom(node);
       for (Edge<T> e : edgesFrom) {
         if (path.isEmpty()) {
-          path += "[till " + e.getDestination() + " med " + e.getName() + " tar " + e.getWeight();
+          path += e.toString();
+          //path += "[till " + e.getDestination() + " med " + e.getName() + " tar " + e.getWeight();
         }
         else {
-          path += ", till " + e.getDestination() + " med " + e.getName() + " tar " + e.getWeight();
+          //kan vi inte bara använda oss av edges toString?
+          path += ", " + e.toString();
+          //path += ", till " + e.getDestination() + " med " + e.getName() + " tar " + e.getWeight();
         }
       }
     }

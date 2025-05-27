@@ -372,10 +372,10 @@ public class Gui extends Application {
     pane.setMaxSize(image.getWidth(), image.getHeight());
 
     //hittade inget annat sätt än att hårdkoda med 50
-    stage.setMinHeight(image.getHeight() + grid.getHeight() + 50);
-    stage.setMinWidth(image.getWidth() + 50);
+    //stage.setMinHeight(image.getHeight() + grid.getHeight() + 50);
+    //stage.setMinWidth(image.getWidth() + 50);
 
-    //stage.sizeToScene();
+    stage.sizeToScene();
   }
 
   //kändes onödig när jag ändå flyttade ut den koden över  setstagestage så la till de två raderna,

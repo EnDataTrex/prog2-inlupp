@@ -76,8 +76,7 @@ public class Gui extends Application {
     menuBar.getItems().add(menuItemNewMap);
     //-------------------------------------------------------------------------------//
     /* Sätt bilen till fixed, och se till att fönstrets minimi storlek är anpassad till den så
-    * den alltid är synlig, men se också till att weight/alignment är anpassat till resten av fönstret
-    * TODO KOLLA UPP VILKA KOMMANDON SOM GÖR PADDING TRANSFORMATIVT*/
+    * den alltid är synlig, men se också till att weight/alignment är anpassat till resten av fönstret*/
     Label openLabel = new Label("Open");
     openLabel.setPadding(new Insets(1, 30, 1, 1));
     openLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
@@ -689,15 +688,23 @@ public class Gui extends Application {
 
         ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getDialogPane().getButtonTypes().setAll(okButton, cancelButton);
         Optional<ButtonType> result = alert.showAndWait();
+        if(isInteger(timeField.getText()) && timeField.getText() != null) {
+          int time = Integer.parseInt(timeField.getText());
+          String name = edge.getName();
+          //Jag vet inte om det här är så smidigt haha. Måste också göra fler checkar.
+          graph.disconnect(firstLocation.getName(),secondLocation.getName());
 
-        int time = Integer.parseInt(timeField.getText());
-        String name = edge.getName();
-
-        //Jag vet inte om det här är så smidigt haha. Måste också göra fler checkar.
-        graph.disconnect(firstLocation.getName(),secondLocation.getName());
-
-        graph.connect(firstLocation.getName(), secondLocation.getName(), name, time);
+          graph.connect(firstLocation.getName(), secondLocation.getName(), name, time);
+        }else{
+          Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+          errorAlert.setTitle("Not a valid time");
+          errorAlert.setHeaderText("Not a valid time");
+          errorAlert.setContentText("Time must be filled in correctly");
+          errorAlert.getDialogPane().getButtonTypes().setAll(okButton);
+          errorAlert.showAndWait();
+        }
       }
       else{
         errorMessageNoConnection();
@@ -727,7 +734,10 @@ public class Gui extends Application {
         dialog.getDialogPane().getButtonTypes().setAll(okButton);
         TextArea textArea = new TextArea();
         int counter = 0;
-        for (Edge<String> edge : listOfPath) {
+
+        //Gjorde om så det blir rätt ordning (connectionens de lade sig åt fel håll först)
+        for (int i = listOfPath.size() - 1; i >= 0; i--) {
+          Edge<String> edge = listOfPath.get(i);
           textArea.appendText(edge.toString() + "\n");
           counter += edge.getWeight();
         }

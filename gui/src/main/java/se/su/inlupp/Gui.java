@@ -532,6 +532,7 @@ public class Gui extends Application {
       Location firstLocation = location[0];
       Location secondLocation = location[1];
 
+      //TODO om det inte finns någon connection funkar inte
       if(checkExistedConnection(firstLocation, secondLocation)){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("No connection available");
@@ -639,7 +640,6 @@ public class Gui extends Application {
           alert.setTitle("Error");
           alert.setHeaderText("Connection Error");
           alert.setContentText("Name and time must be filled in correctly");
-          //TODO operationen ska avbrytas
           alert.showAndWait();
         }
       }

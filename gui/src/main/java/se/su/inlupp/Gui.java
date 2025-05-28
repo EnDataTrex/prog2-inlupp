@@ -38,11 +38,11 @@ public class Gui extends Application {
   StackPane stack;
   Pane pane;
   BorderPane root;
-  boolean saveStatus = false;
   VBox vboxLeft;
   VBox vboxRight;
   ArrayList<String> elements;
   Circle[] markedPlaces = new Circle[2];
+  boolean saveStatus = false;
   //Gör det tydligt om programmet är sparat eller inte
 
   public void start(Stage stage) {
@@ -117,29 +117,11 @@ public class Gui extends Application {
     CustomMenuItem menuItemExit = new CustomMenuItem(exitLabel);
     menuBar.getItems().add(menuItemExit);
 
-    //två problem:
-    //1. klickytan är begränsad till texten, vilket skapar en inte helt användarvanlig funktion,
-    //(skulle typ vilja att hela "boxen" där texten står ingår i klickytan)
-    //2. skulle kunna vara så att detta inte längre är användbart när vi vill lägga till funktioner,
-    //för varje label, vet inte kanske går att göra, kan också vara så att du redan har tänkt,
-    //på detta sättet och kommit fram till samma problem:)
-    /*
-    ArrayList<String> labels = new ArrayList<>(Arrays.asList("New Map", "Open", "Save", "Save Image", "Exit"));
-    for (String label : labels) {
-      Label l = new Label(label);
-      l.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
-      l.setOnMouseClicked(event -> {l.setText("I clicked " + label);});
-      CustomMenuItem customMenuItem1 = new CustomMenuItem(l);
-      menuBar.getItems().add(customMenuItem1);
-    }
-     */
-
     grid.setBackground(Background.fill(Color.LIGHTGREY)); //sätter bakgrund
     grid.add(menuBar, 0, 0); //lägger till menubar i roten
     grid.add(hbox, 0,1); //lägger till hbox i roten
     grid.setPadding(new Insets(10)); //sätter padding aka utrymme mellan rotens innehåll och kanter
 
-    //hbox.setBackground(Background.fill(Color.LIGHTBLUE)); //sätter "övriga knappars" bakgrund till blå
     hbox.setAlignment(Pos.CENTER); //centrerar de "övriga knapparna"
     hbox.setSpacing(3); //Sätter ett utrymme runt knapparna
 
@@ -225,8 +207,6 @@ public class Gui extends Application {
     Scene scene = new Scene(root);
     stage.setScene(scene);
     stage.show();
-    //ladda testfall
-    //testFall();
   }
 
   private void open() {
@@ -247,13 +227,13 @@ public class Gui extends Application {
 
         String line = bufferedReader.readLine();
         String[] objects = line.split(";");
-        for(int i = 0; i < objects.length; i+=3) {
+        for (int i = 0; i < objects.length; i+=3) {
           String name = objects[i];
           double x = Double.parseDouble(objects[i+1]);
           double y = Double.parseDouble(objects[i+2]);
           Location location = new Location(name, x, y);
           locationGraph.add(location);
-          if(!graph.getNodes().contains(name)){
+          if (!graph.getNodes().contains(name)) {
             graph.add(name);
           }
           //skulle kunna göra en metod för att måla ut punkter då vi ockdå gör den i new place
@@ -262,23 +242,23 @@ public class Gui extends Application {
 
         }
 
-        while((line = bufferedReader.readLine()) != null) {
+        while ((line = bufferedReader.readLine()) != null) {
           objects = line.split(";");
           String from = objects[0];
           String to = objects[1];
           String edge = objects[2];
           int weight = Integer.parseInt(objects[3]);
-          if(graph.getEdgeBetween(from, to) == null) {
+          if (graph.getEdgeBetween(from, to) == null) {
 
             graph.connect(from, to, edge, weight);
 
             Location fromLocation = null;
             Location toLocation = null;
             for(Location l : locationGraph.getNodes()) {
-              if(l.getName().equals(from)) {
+              if (l.getName().equals(from)) {
                 fromLocation = l;
               }
-              if(l.getName().equals(to)) {
+              if (l.getName().equals(to)) {
                 toLocation = l;
               }
             }
@@ -290,10 +270,10 @@ public class Gui extends Application {
             }
           }
         }
-      } else{
+      } else {
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You have unsaved changes", ButtonType.OK, ButtonType.CANCEL);
           alert.showAndWait();
-          if(alert.getResult() == ButtonType.OK) {
+          if (alert.getResult() == ButtonType.OK) {
             emptyGraphs();
             saveStatus = false;
             open();
@@ -301,7 +281,7 @@ public class Gui extends Application {
             alert.close();
           }
       }
-    }catch (IOException e){
+    } catch (IOException e) {
       Alert alert = new Alert(Alert.AlertType.ERROR, "IO Error " + e.getMessage());
       alert.showAndWait();
     }
@@ -309,7 +289,7 @@ public class Gui extends Application {
 
   private void save() {
     try{
-      if(image != null){
+      if (image != null) {
       FileChooser fileChooser = new FileChooser();
       File file = fileChooser.showSaveDialog(stage);
 
@@ -317,23 +297,29 @@ public class Gui extends Application {
       PrintWriter printWriter = new PrintWriter(fileWriter);
 
       printWriter.println(fileName);
-      for(Location l : locationGraph.getNodes()) {
-        if(!locationGraph.getNodes().isEmpty()){
+      int count = 0;
+      for (Location l : locationGraph.getNodes()) {
+        //TODO vet inte om det finns en finare lösning men denna funkar med count
+        if (!locationGraph.getNodes().isEmpty()) {
+          int locationGraphSize = locationGraph.getNodes().size();
           String locationWithFormat = "";
-          locationWithFormat = locationWithFormat + l.getName() + ";" + l.getX() + ";" + l.getY() + ";";
-          printWriter.write(locationWithFormat);
-          //TODO om det är den sista i listan ska inget ; skrivas ut
+          if (count != locationGraphSize - 1) {
+            locationWithFormat = locationWithFormat + l.getName() + ";" + l.getX() + ";" + l.getY() + ";";
+            printWriter.write(locationWithFormat);
+          } else {
+            locationWithFormat = locationWithFormat + l.getName() + ";" + l.getX() + ";" + l.getY();
+            printWriter.write(locationWithFormat);
+          }
         }
+        count++;
       }
       printWriter.println();
       //går igenom alla noder i graph
-      for(String node : graph.getNodes()) {
-        //String nodeWithFormat = "";
-        //nodeWithFormat = nodeWithFormat + node + ";";
+      for (String node : graph.getNodes()) {
         //kollar så att listan inte är tom
-        if(!graph.getNodes().isEmpty()){
+        if (!graph.getNodes().isEmpty()) {
           //går igenom alla edges för noden
-          for(Edge<String> edge : graph.getEdgesFrom(node)) {
+          for (Edge<String> edge : graph.getEdgesFrom(node)) {
             String nodeWithFormat = node + ";" + edge.getDestination() + ";" + edge.getName() + ";" + edge.getWeight() + "\n";
             printWriter.print(nodeWithFormat);
           }
@@ -341,14 +327,14 @@ public class Gui extends Application {
       }
       printWriter.close();
       fileWriter.close();
-      } else{
+      } else {
         Alert alert = new Alert(Alert.AlertType.ERROR, "No image Error");
         alert.showAndWait();
       }
-    } catch (FileNotFoundException e){
+    } catch (FileNotFoundException e) {
       Alert alert = new Alert(Alert.AlertType.ERROR, "File not found!");
       alert.showAndWait();
-    } catch (IOException e){
+    } catch (IOException e) {
       Alert alert = new Alert(Alert.AlertType.ERROR, "IO Error " + e.getMessage());
       alert.showAndWait();
     }
@@ -366,23 +352,11 @@ public class Gui extends Application {
     setStageSize();
   }
 
-  private void setStageSize(){
+  private void setStageSize() {
     pane.setMinSize(image.getWidth(), image.getHeight());
     pane.setMaxSize(image.getWidth(), image.getHeight());
-
-    //hittade inget annat sätt än att hårdkoda med 50
-    //stage.setMinHeight(image.getHeight() + grid.getHeight() + 50);
-    //stage.setMinWidth(image.getWidth() + 50);
-
     stage.sizeToScene();
   }
-
-  //kändes onödig när jag ändå flyttade ut den koden över  setstagestage så la till de två raderna,
-  //kod där istället
-  //private void changeWindowSize(double width, double height) {
-    //stack.setMinHeight(height);
-    //stack.setMinWidth(width);
-  //}
 
   private void setBackground(Image image) {
     pane.getChildren().clear();
@@ -393,8 +367,6 @@ public class Gui extends Application {
             BackgroundPosition.CENTER,
             BackgroundSize.DEFAULT
     );
-    //changeWindowSize(image.getWidth(), image.getHeight());
-    setStageSize();
     stack.setBackground(new Background(backgroundImage));
   }
 
@@ -432,7 +404,7 @@ public class Gui extends Application {
     }
   }
 
-  private void newPlace(){
+  private void newPlace() {
     //Detta löste klickproblemet med new place, den klagar lite grann men vet inget annat sätt
     //Istället för att sätta den till null där nere (pane.setOnMouseClicked(null);)
     //Så sätt den till paneMouseHandler så man "återställer" den till så den var förut
@@ -528,7 +500,7 @@ public class Gui extends Application {
     });
   }
 
-  private void showConnection(){
+  private void showConnection() {
     checkMarkedPlaces();
     Location[] location = getLocationFromMarkedPlaces();
     if (location != null && location.length >= 2) {
@@ -561,7 +533,7 @@ public class Gui extends Application {
     }
   }
 
-  private void checkMarkedPlaces(){
+  private void checkMarkedPlaces() {
     if (markedPlaces[0] == null || markedPlaces[1] == null) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Error");
@@ -595,7 +567,7 @@ public class Gui extends Application {
     return null;
   }
 
-  private void newConnection(){
+  private void newConnection() {
     checkMarkedPlaces();
 
     if (getLocationFromMarkedPlaces() != null) {
@@ -655,7 +627,7 @@ public class Gui extends Application {
     return graph.getEdgeBetween(firstLocation.getName(), secondLocation.getName()) != null;
   }
 
-  private void errorMessageNoConnection(){
+  private void errorMessageNoConnection() {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setTitle("Error");
     alert.setHeaderText("Connection Error");
@@ -663,7 +635,7 @@ public class Gui extends Application {
     alert.showAndWait();
   }
 
-  private void changeConnection(){
+  private void changeConnection() {
     checkMarkedPlaces();
     Location[] location = getLocationFromMarkedPlaces();
     if (location != null) {
@@ -681,6 +653,7 @@ public class Gui extends Application {
         TextField nameField = new TextField(edge.getName());
         nameField.setEditable(false);
         nameField.setFocusTraversable(false);
+        //TODO dublicerad kod, skulle kunna flytta ut den
         TextField timeField = new TextField();
 
         VBox fields = new VBox(10, new Label("Name:"), nameField, new Label("Time"), timeField);
@@ -689,15 +662,17 @@ public class Gui extends Application {
         ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getDialogPane().getButtonTypes().setAll(okButton, cancelButton);
+
         Optional<ButtonType> result = alert.showAndWait();
-        if(isInteger(timeField.getText()) && timeField.getText() != null) {
+
+        if (isInteger(timeField.getText()) && timeField.getText() != null && result.isPresent() && result.get() == okButton) {
           int time = Integer.parseInt(timeField.getText());
           String name = edge.getName();
           //Jag vet inte om det här är så smidigt haha. Måste också göra fler checkar.
           graph.disconnect(firstLocation.getName(),secondLocation.getName());
 
           graph.connect(firstLocation.getName(), secondLocation.getName(), name, time);
-        }else{
+        } else {
           Alert errorAlert = new Alert(Alert.AlertType.ERROR);
           errorAlert.setTitle("Not a valid time");
           errorAlert.setHeaderText("Not a valid time");
@@ -705,8 +680,7 @@ public class Gui extends Application {
           errorAlert.getDialogPane().getButtonTypes().setAll(okButton);
           errorAlert.showAndWait();
         }
-      }
-      else{
+      } else {
         errorMessageNoConnection();
       }
     }
@@ -716,12 +690,12 @@ public class Gui extends Application {
     try{
       Integer.parseInt(integerToCheck);
       return true;
-    }catch(Exception e){
+    } catch (Exception e) {
       return false;
     }
   }
 
-  private void findPath(){
+  private void findPath() {
     checkMarkedPlaces();
     if (getLocationFromMarkedPlaces() != null) {
       Location[] location = getLocationFromMarkedPlaces();
@@ -735,43 +709,33 @@ public class Gui extends Application {
         TextArea textArea = new TextArea();
         int counter = 0;
 
-        //Gjorde om så det blir rätt ordning (connectionens de lade sig åt fel håll först)
-        for (int i = listOfPath.size() - 1; i >= 0; i--) {
-          Edge<String> edge = listOfPath.get(i);
+        for (Edge<String> edge : listOfPath) {
           textArea.appendText(edge.toString() + "\n");
           counter += edge.getWeight();
         }
+        //Gjorde om så det blir rätt ordning (connectionens de lade sig åt fel håll först)
+        //for (int i = listOfPath.size() - 1; i >= 0; i--) {
+          //Edge<String> edge = listOfPath.get(i);
+          //textArea.appendText(edge.toString() + "\n");
+          //counter += edge.getWeight();
+        //}
         textArea.appendText("Total " + counter + "\n");
 
         textArea.setEditable(false);
         textArea.setFocusTraversable(false);
         dialog.getDialogPane().setContent(textArea);
         dialog.showAndWait();
+      } else {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText("Path Error");
+        alert.setContentText("No path available");
+        alert.showAndWait();
       }
     }
   }
 
   public static void main(String[] args) {
     launch(args);
-  }
-
-  public void testFall() {
-    Location location1 = new Location("Stockholm", 33,45);
-    locationGraph.add(location1);
-
-    Location location2 = new Location("Malmö", 55, 60);
-    locationGraph.add(location2);
-
-    Location location3 = new Location("Göteborg", 120, 30);
-    locationGraph.add(location3);
-
-    String node1 = "Stockholm";
-    String node2 = "Malmö";
-    String node3 = "Göteborg";
-    graph.add(node1);
-    graph.add(node2);
-    graph.add(node3);
-    graph.connect(node1, node2, "train", 4);
-    graph.connect(node2, node3, "airplane", 2);
   }
 }

@@ -152,36 +152,15 @@ public class ListGraph<T> implements Graph<T> {
       while (current != null && !current.equals(from)) {
         T next = connectedNodes.get(current);
         Edge<T> edge = getEdgeBetween(next, current);
-        path.add(edge);
+        //TODO tror det löste sig om man bara la addFirst istället för bara add
+        path.addFirst(edge);
         current = next;
       }
+      System.out.println(path);
       return path;
     }
     return null;
   }
-/*
-  @Override
-  public List<Edge<T>> getPath(T from, T to) {
-    List<Edge<T>> path = new ArrayList<>();
-    try {
-      Map<T, T> connectedNodes = new HashMap<>();
-      recursiveConnect(from, null, connectedNodes);
-      T current = to;
-      while (current != null && !current.equals(from)) {
-        T next = connectedNodes.get(current);
-        Edge<T> edge = getEdgeBetween(next, current);
-        path.add(edge);
-        current = next;
-      }
-    } finally {
-      if(path.isEmpty()){
-        return null;
-      }
-    }
-    return path;
-  }
-
- */
 
   private void recursiveConnect(T to, T from, Map<T, T> connectedNodes) {
     connectedNodes.put(to, from);

@@ -74,7 +74,7 @@ public class Gui extends Application {
     newMapLabel.setPadding(new Insets(1, 30, 1, 1));
     newMapLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
     newMapLabel.setOnMouseClicked(event -> {
-      enableHbox();
+      enableHBox();
       newMap();
       saveStatus = true;
     });
@@ -87,7 +87,7 @@ public class Gui extends Application {
     openLabel.setPadding(new Insets(1, 30, 1, 1));
     openLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
     openLabel.setOnMouseClicked(event -> {
-      enableHbox();
+      enableHBox();
       open();
       saveStatus = true;
     });
@@ -167,10 +167,7 @@ public class Gui extends Application {
     hbox.getChildren().get(2).onMouseClickedProperty().setValue(event -> {
       hbox.getChildren().get(2).setStyle("-fx-background-color: #fff7e2;");
       root.setBackground(Background.fill(Color.web("fff7e2")));
-      //TODO kollar om filename inte är null så att det finns en bakgrundsbild?
-      if (fileName != null) {
         newPlace();
-      }
       hbox.getChildren().get(2).setStyle("-fx-background-color: floralwhite; -fx-border-color: darkgray;");
     });
 
@@ -210,7 +207,7 @@ public class Gui extends Application {
 
     /*-----------------------------------------------------------------------------------*/
     if (image == null) {
-      disableHbox();
+      disableHBox();
     }
 
     Scene scene = new Scene(root);
@@ -273,13 +270,11 @@ public class Gui extends Application {
               }
             }
             if (fromLocation != null && toLocation != null) {
-              Line connectionLine = new Line(fromLocation.getX(), fromLocation.getY(), toLocation.getX(), toLocation.getY());
-              connectionLine.setStrokeWidth(2);
-              connectionLine.setStroke(Color.BLACK);
-              pane.getChildren().add(connectionLine);
+              drawLineOnMap(fromLocation, toLocation);
             }
           }
         }
+        saveStatus = true;
       } else {
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You have unsaved changes", ButtonType.OK, ButtonType.CANCEL);
           alert.showAndWait();
@@ -353,15 +348,28 @@ public class Gui extends Application {
   }
 
   private void newMap() {
-    FileChooser filechooser = new FileChooser();
-    File file = filechooser.showOpenDialog(stage);
+    if (!saveStatus) {
+      FileChooser filechooser = new FileChooser();
+      File file = filechooser.showOpenDialog(stage);
 
-    fileName = file.toURI().toString();
-    image = new Image(fileName, false);
+      fileName = file.toURI().toString();
+      image = new Image(fileName, false);
 
-    setBackground(image);
+      setBackground(image);
 
-    setStageSize();
+      setStageSize();
+    }
+    else{
+      Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You have unsaved changes", ButtonType.OK, ButtonType.CANCEL);
+      alert.showAndWait();
+      if (alert.getResult() == ButtonType.OK) {
+        emptyGraphs();
+        saveStatus = false;
+        newMap();
+      } else if (alert.getResult() == ButtonType.CANCEL) {
+        alert.close();
+      }
+    }
   }
 
   private void setStageSize() {
@@ -424,7 +432,7 @@ public class Gui extends Application {
 
     root.setCursor(Cursor.CROSSHAIR);
 
-    disableHbox();
+    disableHBox();
 
     pane.setOnMouseClicked(mouseEvent -> {
 
@@ -453,7 +461,7 @@ public class Gui extends Application {
       pane.setOnMouseClicked(paneMouseHandler);
       root.setCursor(Cursor.DEFAULT);
 
-      enableHbox();
+      enableHBox();
     });
   }
 
@@ -563,7 +571,6 @@ public class Gui extends Application {
           //hämtar ut location
           firstLocation = l;
         }
-        //kan orsaka problem med == och doubles
         if (l.getX() == markedPlaces[1].getCenterX() && l.getY() == markedPlaces[1].getCenterY()) {
           secondLocation = l;
         }
@@ -615,10 +622,7 @@ public class Gui extends Application {
           int time = Integer.parseInt(timeField.getText());
           graph.connect(firstLocation.getName(), secondLocation.getName(), name, time);
 
-          Line line = new Line(firstLocation.getX(), firstLocation.getY(), secondLocation.getX(), secondLocation.getY());
-          line.setStrokeWidth(2);
-          line.setStroke(Color.BLACK);
-          pane.getChildren().add(line);
+          drawLineOnMap(firstLocation, secondLocation);
 
         } else {
           Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -629,6 +633,13 @@ public class Gui extends Application {
         }
       }
     }
+  }
+
+  private void drawLineOnMap(Location from, Location to) {
+    Line line = new Line(from.getX(), from.getY(), to.getX(), to.getY());
+    line.setStrokeWidth(2);
+    line.setStroke(Color.BLACK);
+    pane.getChildren().add(line);
   }
 
   private boolean checkExistedConnection(Location firstLocation, Location secondLocation) {
@@ -661,7 +672,6 @@ public class Gui extends Application {
         TextField nameField = new TextField(edge.getName());
         nameField.setEditable(false);
         nameField.setFocusTraversable(false);
-        //TODO dublicerad kod, skulle kunna flytta ut den
         TextField timeField = new TextField();
 
         VBox fields = new VBox(10, new Label("Name:"), nameField, new Label("Time"), timeField);
@@ -676,7 +686,7 @@ public class Gui extends Application {
         if (isInteger(timeField.getText()) && timeField.getText() != null && result.isPresent() && result.get() == okButton) {
           int time = Integer.parseInt(timeField.getText());
           String name = edge.getName();
-          //Jag vet inte om det här är så smidigt haha. Måste också göra fler checkar.
+
           graph.disconnect(firstLocation.getName(),secondLocation.getName());
 
           graph.connect(firstLocation.getName(), secondLocation.getName(), name, time);
@@ -737,13 +747,13 @@ public class Gui extends Application {
     }
   }
 
-  private void enableHbox() {
+  private void enableHBox() {
     for (String e : elements) {
       hbox.getChildren().get(elements.indexOf(e)).setDisable(false);
     }
   }
 
-  private void disableHbox() {
+  private void disableHBox() {
     for (String e : elements) {
       hbox.getChildren().get(elements.indexOf(e)).setDisable(true);
     }

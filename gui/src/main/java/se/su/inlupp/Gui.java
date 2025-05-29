@@ -231,61 +231,56 @@ public class Gui extends Application {
 
         File file = fileChooser.showOpenDialog(stage);
 
-        String fileExtension = file.getName().substring(file.getName().lastIndexOf(".") + 1);
-        if (!fileExtension.equals("graph")) {
+        FileReader fileReader = new FileReader(file);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-          FileReader fileReader = new FileReader(file);
-          BufferedReader bufferedReader = new BufferedReader(fileReader);
+        emptyGraphs();
 
-          emptyGraphs();
+        fileName = bufferedReader.readLine();
+        image = new Image(fileName, false);
+        setBackground(image);
+        setStageSize();
 
-          fileName = bufferedReader.readLine();
-          image = new Image(fileName, false);
-          setBackground(image);
-          setStageSize();
-
-          String line = bufferedReader.readLine();
-          String[] objects = line.split(";");
-          for (int i = 0; i < objects.length; i+=3) {
-            String name = objects[i];
-            double x = Double.parseDouble(objects[i+1]);
-            double y = Double.parseDouble(objects[i+2]);
-            Location location = new Location(name, x, y);
-            locationGraph.add(location);
-            if (!graph.getNodes().contains(name)) {
-              graph.add(name);
-            }
-            //skulle kunna göra en metod för att måla ut punkter då vi ockdå gör den i new place
-            Circle circle = new Circle(location.getX(), location.getY(), 7, Color.BLUE);
-            pane.getChildren().add(circle);
+        String line = bufferedReader.readLine();
+        String[] objects = line.split(";");
+        for (int i = 0; i < objects.length; i+=3) {
+          String name = objects[i];
+          double x = Double.parseDouble(objects[i+1]);
+          double y = Double.parseDouble(objects[i+2]);
+          Location location = new Location(name, x, y);
+          locationGraph.add(location);
+          if (!graph.getNodes().contains(name)) {
+            graph.add(name);
           }
+          //skulle kunna göra en metod för att måla ut punkter då vi ockdå gör den i new place
+          Circle circle = new Circle(location.getX(), location.getY(), 7, Color.BLUE);
+          pane.getChildren().add(circle);
+        }
 
-          while ((line = bufferedReader.readLine()) != null) {
-            objects = line.split(";");
-            String from = objects[0];
-            String to = objects[1];
-            String edge = objects[2];
-            int weight = Integer.parseInt(objects[3]);
-            if (graph.getEdgeBetween(from, to) == null) {
+        while ((line = bufferedReader.readLine()) != null) {
+          objects = line.split(";");
+          String from = objects[0];
+          String to = objects[1];
+          String edge = objects[2];
+          int weight = Integer.parseInt(objects[3]);
+          if (graph.getEdgeBetween(from, to) == null) {
+            graph.connect(from, to, edge, weight);
 
-              graph.connect(from, to, edge, weight);
-
-              Location fromLocation = null;
-              Location toLocation = null;
-              for (Location l : locationGraph.getNodes()) {
-               if (l.getName().equals(from)) {
-                  fromLocation = l;
-                }
-               if (l.getName().equals(to)) {
-                  toLocation = l;
-               }
+            Location fromLocation = null;
+            Location toLocation = null;
+            for (Location l : locationGraph.getNodes()) {
+              if (l.getName().equals(from)) {
+                fromLocation = l;
               }
-              if (fromLocation != null && toLocation != null) {
-                Line connectionLine = new Line(fromLocation.getX(), fromLocation.getY(), toLocation.getX(), toLocation.getY());
-                connectionLine.setStrokeWidth(2);
-                connectionLine.setStroke(Color.BLACK);
-                pane.getChildren().add(connectionLine);
+              if (l.getName().equals(to)) {
+                toLocation = l;
               }
+            }
+            if (fromLocation != null && toLocation != null) {
+              Line connectionLine = new Line(fromLocation.getX(), fromLocation.getY(), toLocation.getX(), toLocation.getY());
+              connectionLine.setStrokeWidth(2);
+              connectionLine.setStroke(Color.BLACK);
+              pane.getChildren().add(connectionLine);
             }
           }
         }

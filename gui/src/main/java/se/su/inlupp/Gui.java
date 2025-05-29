@@ -69,6 +69,11 @@ public class Gui extends Application {
     newMapLabel.setPadding(new Insets(1, 30, 1, 1));
     newMapLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
     newMapLabel.setOnMouseClicked(event -> {
+      if (image == null) {
+        for (String e : elements) {
+          hbox.getChildren().get(elements.indexOf(e)).setDisable(false);
+        }
+      }
       newMap();
       saveStatus = true;
     });
@@ -81,6 +86,12 @@ public class Gui extends Application {
     openLabel.setPadding(new Insets(1, 30, 1, 1));
     openLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
     openLabel.setOnMouseClicked(event -> {
+      //TODO kanske ska flytta ut denna till en metod då den används på tre ställen
+      if (image == null) {
+        for (String e : elements) {
+          hbox.getChildren().get(elements.indexOf(e)).setDisable(false);
+        }
+      }
       open();
       saveStatus = true;
     });
@@ -135,7 +146,6 @@ public class Gui extends Application {
     for (String element : elements) {
       Button button = new Button(element);//skapar ny knapp
       button.setStyle("-fx-background-color: floralwhite; -fx-border-color: darkgray;");
-      //button.setBackground(Background.fill(Color.FLORALWHITE)); //sätter färg
       hbox.getChildren().add(button); //lägger till den som ett barn i hbox
     }
 
@@ -203,6 +213,9 @@ public class Gui extends Application {
     });
 
     /*-----------------------------------------------------------------------------------*/
+    for (String e : elements) {
+      hbox.getChildren().get(elements.indexOf(e)).setDisable(true);
+    }
 
     Scene scene = new Scene(root);
     stage.setScene(scene);

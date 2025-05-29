@@ -156,7 +156,6 @@ public class ListGraph<T> implements Graph<T> {
         path.addFirst(edge);
         current = next;
       }
-      System.out.println(path);
       return path;
     }
     return null;

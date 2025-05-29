@@ -69,15 +69,7 @@ public class Gui extends Application {
     newMapLabel.setPadding(new Insets(1, 30, 1, 1));
     newMapLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
     newMapLabel.setOnMouseClicked(event -> {
-      /*
-      if (image == null) {
-        for (String e : elements) {
-          hbox.getChildren().get(elements.indexOf(e)).setDisable(false);
-        }
-      }
-
-       */
-      disableHbox();
+      enableHbox();
       newMap();
       saveStatus = true;
     });
@@ -90,12 +82,7 @@ public class Gui extends Application {
     openLabel.setPadding(new Insets(1, 30, 1, 1));
     openLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
     openLabel.setOnMouseClicked(event -> {
-      //TODO kanske ska flytta ut denna till en metod då den används på tre ställen
-      if (image == null) {
-        for (String e : elements) {
-          hbox.getChildren().get(elements.indexOf(e)).setDisable(false);
-        }
-      }
+      enableHbox();
       open();
       saveStatus = true;
     });
@@ -217,8 +204,8 @@ public class Gui extends Application {
     });
 
     /*-----------------------------------------------------------------------------------*/
-    for (String e : elements) {
-      hbox.getChildren().get(elements.indexOf(e)).setDisable(true);
+    if (image == null) {
+      disableHbox();
     }
 
     Scene scene = new Scene(root);
@@ -432,9 +419,7 @@ public class Gui extends Application {
 
     root.setCursor(Cursor.CROSSHAIR);
 
-    //for (String e : elements) {
-      //hbox.getChildren().get(elements.indexOf(e)).setDisable(true);
-    //}
+    disableHbox();
 
     pane.setOnMouseClicked(mouseEvent -> {
 
@@ -463,9 +448,7 @@ public class Gui extends Application {
       pane.setOnMouseClicked(paneMouseHandler);
       root.setCursor(Cursor.DEFAULT);
 
-      for (String e : elements) {
-        hbox.getChildren().get(elements.indexOf(e)).setDisable(false);
-      }
+      enableHbox();
     });
   }
 
@@ -749,11 +732,15 @@ public class Gui extends Application {
     }
   }
 
+  private void enableHbox() {
+    for (String e : elements) {
+      hbox.getChildren().get(elements.indexOf(e)).setDisable(false);
+    }
+  }
+
   private void disableHbox() {
-    if (image == null) {
-      for (String e : elements) {
-        hbox.getChildren().get(elements.indexOf(e)).setDisable(true);
-      }
+    for (String e : elements) {
+      hbox.getChildren().get(elements.indexOf(e)).setDisable(true);
     }
   }
 

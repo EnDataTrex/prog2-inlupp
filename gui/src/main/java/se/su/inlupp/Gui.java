@@ -107,9 +107,7 @@ public class Gui extends Application {
     Label saveImageLabel = new Label("Save Image");
     saveImageLabel.setPadding(new Insets(1, 30, 1, 1));
     saveImageLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
-    saveImageLabel.setOnMouseClicked(event -> {
-      saveImage();
-    });
+    saveImageLabel.setOnMouseClicked(event -> saveImage());
     CustomMenuItem menuItemSaveImage = new CustomMenuItem(saveImageLabel);
     menuBar.getItems().add(menuItemSaveImage);
 

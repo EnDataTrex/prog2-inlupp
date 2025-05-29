@@ -42,6 +42,6 @@ public class EdgeClass<T> implements Edge<T>{
 
     @Override
     public String toString(){
-        return "Till " + destination + " med " + name + " tar " + weight;
+        return "till " + destination + " med " + name + " tar " + weight;
     }
 }

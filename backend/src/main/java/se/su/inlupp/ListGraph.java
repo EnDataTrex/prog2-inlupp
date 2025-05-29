@@ -157,7 +157,6 @@ public class ListGraph<T> implements Graph<T> {
       while (current != null && !current.equals(from)) {
         T next = connectedNodes.get(current);
         Edge<T> edge = getEdgeBetween(next, current);
-        //TODO tror det löste sig om man bara la addFirst istället för bara add
         path.addFirst(edge);
         current = next;
       }
@@ -176,22 +175,22 @@ public class ListGraph<T> implements Graph<T> {
   }
   @Override
   public String toString(){
-    String path = "";
+    StringBuilder path = new StringBuilder();
     for(T node : nodes.keySet()) {
       Collection<Edge<T>> edgesFrom = getEdgesFrom(node);
       for (Edge<T> e : edgesFrom) {
         if (path.isEmpty()) {
-          path += e.toString();
+          path.append(e.toString());
         }
         else {
-          path += ", " + e.toString();
+          path.append(", ").append(e.toString());
         }
       }
     }
     for (T node : nodes.keySet()) {
-      path += ", " + node;
+      path.append(", ").append(node);
     }
-    path += "]";
-    return path;
+    path.append("]");
+    return path.toString();
   }
 }

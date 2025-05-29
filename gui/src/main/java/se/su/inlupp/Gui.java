@@ -363,24 +363,6 @@ public class Gui extends Application {
     }
   }
 
-  private void setStageSize() {
-    pane.setMinSize(image.getWidth(), image.getHeight());
-    pane.setMaxSize(image.getWidth(), image.getHeight());
-    stage.sizeToScene();
-  }
-
-  private void setBackground(Image image) {
-    pane.getChildren().clear();
-    BackgroundImage backgroundImage = new BackgroundImage(
-            image,
-            BackgroundRepeat.NO_REPEAT,
-            BackgroundRepeat.NO_REPEAT,
-            BackgroundPosition.CENTER,
-            BackgroundSize.DEFAULT
-    );
-    stack.setBackground(new Background(backgroundImage));
-  }
-
   private void saveImage() {
     try {
       WritableImage image = stack.snapshot(null, null);
@@ -461,11 +443,6 @@ public class Gui extends Application {
     });
   }
 
-  private void emptyGraphs() {
-    graph = new ListGraph<>();
-    locationGraph = new ListGraph<>();
-  }
-
   private void markPlace() {
     pane.setOnMouseClicked(mouseEvent -> {
       double x = mouseEvent.getX();
@@ -544,39 +521,6 @@ public class Gui extends Application {
     }
   }
 
-  private void checkMarkedPlaces() {
-    if (markedPlaces[0] == null || markedPlaces[1] == null) {
-      Alert alert = new Alert(Alert.AlertType.ERROR);
-      alert.setTitle("Error");
-      alert.setHeaderText("Connection Error");
-      alert.setContentText("Two places are not marked");
-      alert.showAndWait();
-    }
-  }
-
-  private Location[] getLocationFromMarkedPlaces() {
-    Location[] locations = new Location[2];
-    if (markedPlaces[0] != null && markedPlaces[1] != null) {
-      Location firstLocation = null;
-      Location secondLocation = null;
-      //gå igenom listan över locations
-      for (Location l : locationGraph.getNodes()) {
-        //kolla om noden är lika
-        if (l.getX() == markedPlaces[0].getCenterX() && l.getY() == markedPlaces[0].getCenterY()) {
-          //hämtar ut location
-          firstLocation = l;
-        }
-        if (l.getX() == markedPlaces[1].getCenterX() && l.getY() == markedPlaces[1].getCenterY()) {
-          secondLocation = l;
-        }
-      }
-      locations[0] = firstLocation;
-      locations[1] = secondLocation;
-      return locations;
-    }
-    return null;
-  }
-
   private void newConnection() {
     checkMarkedPlaces();
 
@@ -631,25 +575,6 @@ public class Gui extends Application {
     }
   }
 
-  private void drawLineOnMap(Location from, Location to) {
-    Line line = new Line(from.getX(), from.getY(), to.getX(), to.getY());
-    line.setStrokeWidth(2);
-    line.setStroke(Color.BLACK);
-    pane.getChildren().add(line);
-  }
-
-  private boolean checkExistedConnection(Location firstLocation, Location secondLocation) {
-    return graph.getEdgeBetween(firstLocation.getName(), secondLocation.getName()) != null;
-  }
-
-  private void errorMessageNoConnection() {
-    Alert alert = new Alert(Alert.AlertType.ERROR);
-    alert.setTitle("Error");
-    alert.setHeaderText("Connection Error");
-    alert.setContentText("No connection available");
-    alert.showAndWait();
-  }
-
   private void changeConnection() {
     checkMarkedPlaces();
     Location[] location = getLocationFromMarkedPlaces();
@@ -697,15 +622,6 @@ public class Gui extends Application {
       }
     }
   }
-  //Till för att kolla om time är en int eller inte
-  private boolean isInteger(String integerToCheck) {
-    try{
-      Integer.parseInt(integerToCheck);
-      return true;
-    } catch (Exception e) {
-      return false;
-    }
-  }
 
   private void findPath() {
     checkMarkedPlaces();
@@ -739,6 +655,91 @@ public class Gui extends Application {
         alert.showAndWait();
       }
     }
+  }
+
+  private void setStageSize() {
+    pane.setMinSize(image.getWidth(), image.getHeight());
+    pane.setMaxSize(image.getWidth(), image.getHeight());
+    stage.sizeToScene();
+  }
+
+  private void setBackground(Image image) {
+    pane.getChildren().clear();
+    BackgroundImage backgroundImage = new BackgroundImage(
+            image,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundPosition.CENTER,
+            BackgroundSize.DEFAULT
+    );
+    stack.setBackground(new Background(backgroundImage));
+  }
+
+  private void emptyGraphs() {
+    graph = new ListGraph<>();
+    locationGraph = new ListGraph<>();
+  }
+
+  private void checkMarkedPlaces() {
+    if (markedPlaces[0] == null || markedPlaces[1] == null) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Error");
+      alert.setHeaderText("Connection Error");
+      alert.setContentText("Two places are not marked");
+      alert.showAndWait();
+    }
+  }
+
+  private Location[] getLocationFromMarkedPlaces() {
+    Location[] locations = new Location[2];
+    if (markedPlaces[0] != null && markedPlaces[1] != null) {
+      Location firstLocation = null;
+      Location secondLocation = null;
+      //gå igenom listan över locations
+      for (Location l : locationGraph.getNodes()) {
+        //kolla om noden är lika
+        if (l.getX() == markedPlaces[0].getCenterX() && l.getY() == markedPlaces[0].getCenterY()) {
+          //hämtar ut location
+          firstLocation = l;
+        }
+        if (l.getX() == markedPlaces[1].getCenterX() && l.getY() == markedPlaces[1].getCenterY()) {
+          secondLocation = l;
+        }
+      }
+      locations[0] = firstLocation;
+      locations[1] = secondLocation;
+      return locations;
+    }
+    return null;
+  }
+
+  //Till för att kolla om time är en int eller inte
+  private boolean isInteger(String integerToCheck) {
+    try{
+      Integer.parseInt(integerToCheck);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
+  private void drawLineOnMap(Location from, Location to) {
+    Line line = new Line(from.getX(), from.getY(), to.getX(), to.getY());
+    line.setStrokeWidth(2);
+    line.setStroke(Color.BLACK);
+    pane.getChildren().add(line);
+  }
+
+  private boolean checkExistedConnection(Location firstLocation, Location secondLocation) {
+    return graph.getEdgeBetween(firstLocation.getName(), secondLocation.getName()) != null;
+  }
+
+  private void errorMessageNoConnection() {
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setTitle("Error");
+    alert.setHeaderText("Connection Error");
+    alert.setContentText("No connection available");
+    alert.showAndWait();
   }
 
   private void enableHBox() {

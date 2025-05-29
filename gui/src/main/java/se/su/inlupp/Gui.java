@@ -726,12 +726,7 @@ public class Gui extends Application {
           textArea.appendText(edge.toString() + "\n");
           counter += edge.getWeight();
         }
-        //Gjorde om så det blir rätt ordning (connectionens de lade sig åt fel håll först)
-        //for (int i = listOfPath.size() - 1; i >= 0; i--) {
-          //Edge<String> edge = listOfPath.get(i);
-          //textArea.appendText(edge.toString() + "\n");
-          //counter += edge.getWeight();
-        //}
+
         textArea.appendText("Total " + counter + "\n");
 
         textArea.setEditable(false);

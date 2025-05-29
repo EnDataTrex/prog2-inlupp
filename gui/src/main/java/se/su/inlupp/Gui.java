@@ -43,8 +43,6 @@ public class Gui extends Application {
   StackPane stack;
   Pane pane;
   BorderPane root;
-  VBox vboxLeft;
-  VBox vboxRight;
   ArrayList<String> elements;
   Circle[] markedPlaces = new Circle[2];
   boolean saveStatus = false;
@@ -60,8 +58,6 @@ public class Gui extends Application {
     hbox = new HBox();
     stack = new StackPane();// till för "övriga" knappar
     pane = new Pane();
-    vboxLeft = new VBox();
-    vboxRight = new VBox();
 
     root.setTop(grid);
     root.setCenter(stack);
@@ -76,7 +72,6 @@ public class Gui extends Application {
     newMapLabel.setOnMouseClicked(event -> {
       enableHBox();
       newMap();
-      saveStatus = true;
     });
     CustomMenuItem menuItemNewMap = new CustomMenuItem(newMapLabel);
     menuBar.getItems().add(menuItemNewMap);
@@ -89,7 +84,6 @@ public class Gui extends Application {
     openLabel.setOnMouseClicked(event -> {
       enableHBox();
       open();
-      saveStatus = true;
     });
     CustomMenuItem menuItemOpen = new CustomMenuItem(openLabel);
     menuBar.getItems().add(menuItemOpen);
@@ -98,8 +92,7 @@ public class Gui extends Application {
     saveLabel.setPadding(new Insets(1, 30, 1, 1));
     saveLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
     saveLabel.setOnMouseClicked(event -> {
-        save();
-        saveStatus = false;
+      save();
       });
     CustomMenuItem menuItemSave = new CustomMenuItem(saveLabel);
     menuBar.getItems().add(menuItemSave);
@@ -165,7 +158,7 @@ public class Gui extends Application {
     hbox.getChildren().get(2).onMouseClickedProperty().setValue(event -> {
       hbox.getChildren().get(2).setStyle("-fx-background-color: #fff7e2;");
       root.setBackground(Background.fill(Color.web("fff7e2")));
-        newPlace();
+      newPlace();
       hbox.getChildren().get(2).setStyle("-fx-background-color: floralwhite; -fx-border-color: darkgray;");
     });
 
@@ -174,7 +167,6 @@ public class Gui extends Application {
       hbox.getChildren().get(3).setStyle("-fx-background-color: #f4f0ff;");
       root.setBackground(Background.fill(Color.web("f4f0ff")));
       newConnection();
-
       hbox.getChildren().get(3).setStyle("-fx-background-color: floralwhite; -fx-border-color: darkgray;");
     });
 
@@ -243,7 +235,6 @@ public class Gui extends Application {
           if (!graph.getNodes().contains(name)) {
             graph.add(name);
           }
-          //skulle kunna göra en metod för att måla ut punkter då vi ockdå gör den i new place
           Circle circle = new Circle(location.getX(), location.getY(), 7, Color.BLUE);
           pane.getChildren().add(circle);
         }
@@ -330,6 +321,7 @@ public class Gui extends Application {
           }
         }
       }
+      saveStatus = false;
       printWriter.close();
       fileWriter.close();
       } else {
@@ -354,10 +346,10 @@ public class Gui extends Application {
       image = new Image(fileName, false);
 
       setBackground(image);
-
       setStageSize();
-    }
-    else{
+
+      saveStatus = true;
+    } else {
       Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You have unsaved changes", ButtonType.OK, ButtonType.CANCEL);
       alert.showAndWait();
       if (alert.getResult() == ButtonType.OK) {
@@ -365,6 +357,7 @@ public class Gui extends Application {
         saveStatus = false;
         newMap();
       } else if (alert.getResult() == ButtonType.CANCEL) {
+        saveStatus = false;
         alert.close();
       }
     }
@@ -423,9 +416,6 @@ public class Gui extends Application {
   }
 
   private void newPlace() {
-    //Detta löste klickproblemet med new place, den klagar lite grann men vet inget annat sätt
-    //Istället för att sätta den till null där nere (pane.setOnMouseClicked(null);)
-    //Så sätt den till paneMouseHandler så man "återställer" den till så den var förut
     EventHandler<MouseEvent> paneMouseHandler = (EventHandler<MouseEvent>) pane.getOnMouseClicked();
 
     root.setCursor(Cursor.CROSSHAIR);
@@ -441,7 +431,7 @@ public class Gui extends Application {
       Optional<String> result = newPlaceDialog.showAndWait();
       String name = newPlaceDialog.getEditor().getText();
 
-      if(result.isPresent() && !name.isEmpty()) {
+      if (result.isPresent() && !name.isEmpty()) {
         double x = mouseEvent.getX();
         double y = mouseEvent.getY();
 
@@ -452,9 +442,17 @@ public class Gui extends Application {
         Location location = new Location(name, x, y);
         locationGraph.add(location);
 
-        if(!graph.getNodes().contains(name)){
+        if (!graph.getNodes().contains(name)) {
           graph.add(name);
         }
+        saveStatus = true;
+      } else if (result.isPresent()) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText("Name Error");
+        alert.setContentText("Name cannot be empty");
+        alert.showAndWait();
+        saveStatus = false;
       }
       pane.setOnMouseClicked(paneMouseHandler);
       root.setCursor(Cursor.DEFAULT);
@@ -522,10 +520,9 @@ public class Gui extends Application {
       Location firstLocation = location[0];
       Location secondLocation = location[1];
 
-      if(!checkExistedConnection(firstLocation, secondLocation)){
+      if (!checkExistedConnection(firstLocation, secondLocation)) {
         errorMessageNoConnection();
-      }
-      else{
+      } else {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Connection found");
         alert.setHeaderText("Connection from " + firstLocation.getName() + " to " + secondLocation.getName());
@@ -621,6 +618,7 @@ public class Gui extends Application {
           graph.connect(firstLocation.getName(), secondLocation.getName(), name, time);
 
           drawLineOnMap(firstLocation, secondLocation);
+          saveStatus = true;
 
         } else {
           Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -683,9 +681,9 @@ public class Gui extends Application {
 
         if (isInteger(timeField.getText()) && timeField.getText() != null && result.isPresent() && result.get() == okButton) {
           int time = Integer.parseInt(timeField.getText());
-          String name = edge.getName();
-
           graph.setConnectionWeight(firstLocation.getName(), secondLocation.getName(), time);
+          saveStatus = true;
+
         } else {
           Alert errorAlert = new Alert(Alert.AlertType.ERROR);
           errorAlert.setTitle("Not a valid time");
@@ -727,8 +725,8 @@ public class Gui extends Application {
           textArea.appendText(edge.toString() + "\n");
           counter += edge.getWeight();
         }
-        textArea.appendText("Total " + counter + "\n");
 
+        textArea.appendText("Total " + counter + "\n");
         textArea.setEditable(false);
         textArea.setFocusTraversable(false);
         dialog.getDialogPane().setContent(textArea);

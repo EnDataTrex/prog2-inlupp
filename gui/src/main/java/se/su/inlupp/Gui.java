@@ -205,6 +205,47 @@ public class Gui extends Application {
     stage.show();
   }
 
+  private void loadLocationsFromOpen(String line) {
+    String[] objects = line.split(";");
+    for (int i = 0; i < objects.length; i+=3) {
+      String name = objects[i];
+      double x = Double.parseDouble(objects[i+1]);
+      double y = Double.parseDouble(objects[i+2]);
+      Location location = new Location(name, x, y);
+      locationGraph.add(location);
+      if (!graph.getNodes().contains(name)) {
+        graph.add(name);
+      }
+      Circle circle = new Circle(location.getX(), location.getY(), 7, Color.BLUE);
+      pane.getChildren().add(circle);
+    }
+  }
+
+  private void loadNodesFromOpen(String line) {
+      String[] objects = line.split(";");
+      String from = objects[0];
+      String to = objects[1];
+      String edge = objects[2];
+      int weight = Integer.parseInt(objects[3]);
+      if (graph.getEdgeBetween(from, to) == null) {
+        graph.connect(from, to, edge, weight);
+
+        Location fromLocation = null;
+        Location toLocation = null;
+        for (Location l : locationGraph.getNodes()) {
+          if (l.getName().equals(from)) {
+            fromLocation = l;
+          }
+          if (l.getName().equals(to)) {
+            toLocation = l;
+          }
+        }
+        if (fromLocation != null && toLocation != null) {
+          drawLineOnMap(fromLocation, toLocation);
+        }
+      }
+  }
+
   private void open() {
     try{
       if (!saveStatus) {
@@ -225,6 +266,8 @@ public class Gui extends Application {
         setStageSize();
 
         String line = bufferedReader.readLine();
+        loadLocationsFromOpen(line);
+        /*
         String[] objects = line.split(";");
         for (int i = 0; i < objects.length; i+=3) {
           String name = objects[i];
@@ -239,8 +282,12 @@ public class Gui extends Application {
           pane.getChildren().add(circle);
         }
 
+         */
+
         while ((line = bufferedReader.readLine()) != null) {
-          objects = line.split(";");
+          loadNodesFromOpen(line);
+          /*
+          String[] objects = line.split(";");
           String from = objects[0];
           String to = objects[1];
           String edge = objects[2];
@@ -262,6 +309,7 @@ public class Gui extends Application {
               drawLineOnMap(fromLocation, toLocation);
             }
           }
+          */
         }
         saveStatus = true;
       } else {

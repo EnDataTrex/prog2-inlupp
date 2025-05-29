@@ -177,12 +177,9 @@ public class ListGraph<T> implements Graph<T> {
       for (Edge<T> e : edgesFrom) {
         if (path.isEmpty()) {
           path += e.toString();
-          //path += "[till " + e.getDestination() + " med " + e.getName() + " tar " + e.getWeight();
         }
         else {
-          //kan vi inte bara använda oss av edges toString?
           path += ", " + e.toString();
-          //path += ", till " + e.getDestination() + " med " + e.getName() + " tar " + e.getWeight();
         }
       }
     }

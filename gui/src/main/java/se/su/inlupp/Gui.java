@@ -69,11 +69,15 @@ public class Gui extends Application {
     newMapLabel.setPadding(new Insets(1, 30, 1, 1));
     newMapLabel.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
     newMapLabel.setOnMouseClicked(event -> {
+      /*
       if (image == null) {
         for (String e : elements) {
           hbox.getChildren().get(elements.indexOf(e)).setDisable(false);
         }
       }
+
+       */
+      disableHbox();
       newMap();
       saveStatus = true;
     });
@@ -305,11 +309,10 @@ public class Gui extends Application {
     try{
       if (image != null) {
       FileChooser fileChooser = new FileChooser();
-      File file = fileChooser.showSaveDialog(stage);
 
-      //TODO vet inte riktigt vad dessa gör
-      //FileChooser.ExtensionFilter ex = new FileChooser.ExtensionFilter("graph files (*.graph)", "*.graph");
-      //fileChooser.getExtensionFilters().add(ex);
+      fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("graph files (*.graph)", "*.graph"));
+
+      File file = fileChooser.showSaveDialog(stage);
 
       FileWriter fileWriter = new FileWriter(file);
       PrintWriter printWriter = new PrintWriter(fileWriter);
@@ -317,7 +320,6 @@ public class Gui extends Application {
       printWriter.println(fileName);
       int count = 0;
       for (Location l : locationGraph.getNodes()) {
-        //TODO vet inte om det finns en finare lösning men denna funkar med count
         if (!locationGraph.getNodes().isEmpty()) {
           int locationGraphSize = locationGraph.getNodes().size();
           String locationWithFormat = "";
@@ -430,9 +432,9 @@ public class Gui extends Application {
 
     root.setCursor(Cursor.CROSSHAIR);
 
-    for (String e : elements) {
-      hbox.getChildren().get(elements.indexOf(e)).setDisable(true);
-    }
+    //for (String e : elements) {
+      //hbox.getChildren().get(elements.indexOf(e)).setDisable(true);
+    //}
 
     pane.setOnMouseClicked(mouseEvent -> {
 
@@ -743,6 +745,14 @@ public class Gui extends Application {
         alert.setHeaderText("Path Error");
         alert.setContentText("No path available");
         alert.showAndWait();
+      }
+    }
+  }
+
+  private void disableHbox() {
+    if (image == null) {
+      for (String e : elements) {
+        hbox.getChildren().get(elements.indexOf(e)).setDisable(true);
       }
     }
   }

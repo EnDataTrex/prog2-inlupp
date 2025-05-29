@@ -33,11 +33,9 @@ public class ListGraph<T> implements Graph<T> {
     if(getEdgeBetween(node1, node2) != null) {
       throw new IllegalStateException("One edge between " + node1 + " and " + node2 + " already exists");
     }
-
     fromNodes.add(new EdgeClass<>(node2, name, weight));
     toNodes.add(new EdgeClass<>(node1, name, weight));
   }
-
 
   @Override
   public void setConnectionWeight(T node1, T node2, int weight) {
@@ -132,12 +130,17 @@ public class ListGraph<T> implements Graph<T> {
 
   private boolean recursiveVisitAll(T from, T to, Set<T> visitedNodes) {
     visitedNodes.add(from);
+    //om from är lika med to så har den hittat det den ska
     if (from.equals(to)) {
       return true;
     }
+    //om from finns i listan
     if (nodes.containsKey(from)) {
+      //går igenom alla edges från from
       for (Edge<T> edge : nodes.get(from)) {
+        //om visistedNodes inte innehåller edgens destination
         if (!visitedNodes.contains(edge.getDestination())) {
+          //om den är sann, returneras true
           if (recursiveVisitAll(edge.getDestination(), to, visitedNodes)) {
             return true;
           }
@@ -153,11 +156,17 @@ public class ListGraph<T> implements Graph<T> {
     if (pathExists(from, to)) {
       Map<T, T> connectedNodes = new HashMap<>();
       recursiveConnect(from, null, connectedNodes);
+      //sätter current till to
       T current = to;
+      //medans current inte är null och inte lika med from, kör
       while (current != null && !current.equals(from)) {
+        //next sätts till connectedNodes.get(current)
         T next = connectedNodes.get(current);
+        //tar fram edges från next till current
         Edge<T> edge = getEdgeBetween(next, current);
+        //lägger till edge
         path.addFirst(edge);
+        //sätter current till next
         current = next;
       }
       return path;
@@ -167,12 +176,16 @@ public class ListGraph<T> implements Graph<T> {
 
   private void recursiveConnect(T to, T from, Map<T, T> connectedNodes) {
     connectedNodes.put(to, from);
+    //tar fram alla edges från to
     for(Edge<T> edge : nodes.get(to)) {
+      //om connectedNodes inte innehåller edgens destination
       if (!connectedNodes.containsKey(edge.getDestination())) {
+        //skicka den till recursiveConnect med edge.getDestination() som to och to som from
         recursiveConnect(edge.getDestination(), to, connectedNodes);
       }
     }
   }
+
   @Override
   public String toString(){
     StringBuilder path = new StringBuilder();

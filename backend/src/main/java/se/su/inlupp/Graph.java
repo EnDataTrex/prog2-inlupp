@@ -1,3 +1,8 @@
+//PROG2 VT2025, Inlämningsuppgift, del 1
+//Grupp 228
+//Maja Johnsson majo9305
+//Isabelle Johansson isjo5153
+
 package se.su.inlupp;
 
 import java.util.Collection;

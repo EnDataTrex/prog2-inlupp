@@ -685,9 +685,7 @@ public class Gui extends Application {
           int time = Integer.parseInt(timeField.getText());
           String name = edge.getName();
 
-          graph.disconnect(firstLocation.getName(),secondLocation.getName());
-
-          graph.connect(firstLocation.getName(), secondLocation.getName(), name, time);
+          graph.setConnectionWeight(firstLocation.getName(), secondLocation.getName(), time);
         } else {
           Alert errorAlert = new Alert(Alert.AlertType.ERROR);
           errorAlert.setTitle("Not a valid time");
